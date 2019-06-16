@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Bootstrap CDN-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- Firebase References -->
+    <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-database.js"></script>
+
+    <title>Rock Paper Scissors</title>
+
+</head>
+
+<body>
+    <main></main>
+    <h1>Player 1</h1>
+    <form id='player1updateForm' onsubmit="updatePlayerInformation(1)">
+        <input id='player1nameInput' placeholder="Name"></input>
+        <input id='player1countryInput' placeholder="Country"></input>
+        <button type='submit'>Submit</button>
+    </form>
+    <hr>
+    <h1>Player 2</h1>
+    <form id='player2updateForm' onsubmit="updatePlayerInformation(2)">
+        <input id='player2nameInput' placeholder="Name"></input>
+        <input id='player2countryInput' placeholder="Country"></input>
+        <button type='submit'>Submit</button>
+    </form>
+    <script src='assets/javascript/logic.js'></script>
+</body>
+
+</html>
