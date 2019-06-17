@@ -33,7 +33,7 @@
         <div class='row'>
 
             <!--Player 1-->
-            <div class='col'>
+            <div class='col text-center'>
                 <h1>Player 1</h1>
                 <hr>
                 <div id='player1display'>
@@ -42,6 +42,7 @@
                     <div id='player1selectionDisplay'></div>
                     <div id='player1isReadyDisplay'></div>
                 </div>
+                <br>
                 <form id='player1choiceForm' onsubmit="game.updatePlayerChoiceOnDatabase(1)">
                     <div class="form-group">
                         <select id='player1selectionInput' class='form-control' name="RPSselection">
@@ -51,7 +52,7 @@
                             <option value="scissors">Scissors</option>
                         </select>
                     </div>
-                    <button type='submit' class='btn btn-primary'>Commit</button>
+                    <button type='submit' class='btn btn-primary form-control'>Commit</button>
                 </form>
                 <hr>
                 <form id='player1updateForm' onsubmit="game.updatePlayerInformationOnDatabase(1)">
@@ -61,23 +62,24 @@
                     <div class="form-group">
                         <input id='player1countryInput' class='form-control' placeholder="Country"></input>
                     </div>
-                    <button type='submit' class='btn btn-primary'>Update</button>
+                    <button type='submit' class='btn btn-primary form-control'>Update</button>
                 </form>
             </div>
 
             <!--Battleground-->
             <div class='col'>
-                <h1>Battleground</h1>
+                <h1 class='text-center'>Battleground</h1>
                 <div class='card' style='height: 100%; width: 100%'>
                     <div id='results'></div>
                 </div>
+                <br>
                 <form onsubmit="game.restart()">
-                    <button class='btn btn-primary'>Restart Game</button>
+                    <button class='btn btn-primary form-control'>Restart Game</button>
                 </form>
             </div>
 
             <!--Player 2-->
-            <div class='col'>
+            <div class='col text-center'>
                 <h1>Player 2</h1>
                 <hr>
                 <div id='player2display'>
@@ -86,6 +88,7 @@
                     <div id='player2selectionDisplay'></div>
                     <div id='player2isReadyDisplay'></div>
                 </div>
+                <br>
                 <form id='player2choiceForm' onsubmit="game.updatePlayerChoiceOnDatabase(2)">
                     <div class="form-group">
                         <select id='player2selectionInput' class='form-control' name="RPSselection">
@@ -95,7 +98,7 @@
                             <option value="scissors">Scissors</option>
                         </select>
                     </div>
-                    <button type='submit' class='btn btn-primary'>Commit</button>
+                    <button type='submit' class='btn btn-primary form-control'>Commit</button>
                 </form>
                 <hr>
                 <form id='player2updateForm' onsubmit="game.updatePlayerInformationOnDatabase(2)">
@@ -105,7 +108,7 @@
                     <div class="form-group">
                         <input id='player2countryInput' class='form-control' placeholder="Country"></input>
                     </div>
-                    <button type='submit' class='btn btn-primary'>Update</button>
+                    <button type='submit' class='btn btn-primary form-control'>Update</button>
                 </form>
             </div>
 
