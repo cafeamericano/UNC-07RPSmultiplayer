@@ -21,6 +21,7 @@ var database = firebase.database();
 
 let p1sel;
 let p2sel;
+let messageCountTotal;
 
 //#################################### OBJECTS #############################################
 
@@ -236,7 +237,31 @@ function postMessage(number) {
     });
 
     $(selectionInputToGrab).val('')
-}
+
+    logMessageToDatabase(selectionValue);
+
+};
+
+function logMessageToDatabase(message) {
+
+    //Grab the message count value fromt he database
+    database.ref('messages/count').once('value').then(function (snapshot) {
+        let total = snapshot.val().total
+        let count = total;
+
+        //Write to DB
+        database.ref('messages/log').update({
+            [count]: message,
+        });
+
+        //Then increment count
+        database.ref('messages/count').update({
+            total: total + 1
+        });
+
+    });
+
+};
 
 
 
