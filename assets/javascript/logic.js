@@ -208,9 +208,35 @@ database.ref('/game/results').on("value", function (snapshot) {
     $('#results').text(updatedResultData)
 })
 
+//Listen for message-specific changes
+database.ref('/messages').on("value", function (snapshot) {
+    //Pull the result data, write it to the screen
+    let player1activeMessage = snapshot.val().player1.message
+    let player2activeMessage = snapshot.val().player2.message
+    $('#player1activeMessage').text(player1activeMessage)
+    $('#player2activeMessage').text(player2activeMessage)
+})
 
+//###########################################################################################
+function postMessage(number) {
+    event.preventDefault()
 
+    //Determine which document in Firebase to manipulate
+    let docToAlter = 'messages/player' + number
 
+    //Dynamically establish the divs whose values will be grabbed
+    let selectionInputToGrab = `#player${number}messageInput`
+
+    //Grab the values from the predetermined divs
+    let selectionValue = $(selectionInputToGrab).val().trim()
+
+    //Update the appropriate document in Firebase with the supplied information
+    database.ref(docToAlter).set({
+        message: selectionValue
+    });
+
+    $(selectionInputToGrab).val('')
+}
 
 
 
