@@ -1,7 +1,3 @@
-let p1sel;
-let p2sel;
-let winner;
-
 //#################################### ESTABLISH DB CONNECTION #############################################
 
 // Your web app's Firebase configuration
@@ -21,119 +17,204 @@ firebase.initializeApp(firebaseConfig);
 // Reference to the database
 var database = firebase.database();
 
+//#################################### GLOBAL VARIABLES #############################################
+
+let p1sel;
+let p2sel;
+
+//#################################### OBJECTS #############################################
+
+let player1 = {
+    name: '',
+    country: '',
+    selection: '',
+    isReady: false,
+    updatePlayerInformationOnDatabaseOnHUD: function () {
+        $("#player1information").text(`Player 1: ${this.name} of ${this.country} selects ${this.selection}.`);
+        $("#player1nameDisplay").text(`${this.name}`)
+        $("#player1countryDisplay").text(`${this.country}`)
+        $("#player1selectionDisplay").text(`${this.selection}`)
+        $("#player1isReadyDisplay").text(`${this.isReady}`)
+    }
+};
+
+let player2 = {
+    name: '',
+    country: '',
+    selection: '',
+    isReady: false,
+    updatePlayerInformationOnDatabaseOnHUD: function () {
+        $("#player2information").text(`Player 2: ${this.name} of ${this.country} selects ${this.selection}.`);
+        $("#player2nameDisplay").text(`${this.name}`)
+        $("#player2countryDisplay").text(`${this.country}`)
+        $("#player2selectionDisplay").text(`${this.selection}`)
+        $("#player2isReadyDisplay").text(`${this.isReady}`)
+    },
+
+};
+
+let game = {
+    winningPlayer: '',
+    winningName: '',
+    updatePlayerInformationOnDatabase(number) {
+        event.preventDefault()
+
+        //Determine which document in Firebase to manipulate
+        let docToAlter = '/player' + number
+
+        //Dynamically establish the divs whose values will be grabbed
+        let nameInputToGrab = `#player${number}nameInput`
+        let countryInputToGrab = `#player${number}countryInput`
+
+        //Grab the values from the predetermined divs
+        let nameValue = $(nameInputToGrab).val().trim()
+        let countryValue = $(countryInputToGrab).val().trim()
+
+        //Update the appropriate document in Firebase with the supplied information
+        database.ref(`${docToAlter}/info`).set({
+            name: nameValue,
+            country: countryValue,
+        });
+    },
+    updatePlayerChoiceOnDatabase(number) {
+        event.preventDefault()
+
+        //Determine which document in Firebase to manipulate
+        let docToAlter = '/player' + number
+
+        //Dynamically establish the divs whose values will be grabbed
+        let selectionInputToGrab = `#player${number}selectionInput`
+
+        //Grab the values from the predetermined divs
+        let selectionValue = $(selectionInputToGrab).val().trim()
+
+        //Update the appropriate document in Firebase with the supplied information
+        database.ref(`${docToAlter}/selection`).set({
+            rpsChoice: selectionValue,
+            isReady: true
+        });
+    },
+    analyzeForWin: function () {
+        console.log('p1: ' + p1sel)
+        console.log('p2: ' + p2sel)
+
+        //Check for tie
+        if (p1sel === p2sel) {
+            game.winningPlayer = 'No one'
+            game.winningName = 'No one'
+        };
+
+        //See if player 1 wins
+        if (p1sel === 'rock' && p2sel === 'scissors') {
+            game.winningPlayer = 'Player 1'
+            game.winningName = player1.name
+        } else if (p1sel === 'scissors' && p2sel === 'paper') {
+            game.winningPlayer = 'Player 1'
+            game.winningName = player1.name
+        } else if (p1sel === 'paper' && p2sel === 'rock') {
+            game.winningPlayer = 'Player 1'
+            game.winningName = player1.name
+        };
+
+        //See if player 2 wins
+        if (p2sel === 'rock' && p1sel === 'scissors') {
+            game.winningPlayer = 'Player 2'
+            game.winningName = player2.name
+        } else if (p2sel === 'scissors' && p1sel === 'paper') {
+            game.winningPlayer = 'Player 2'
+            game.winningName = player2.name
+        } else if (p2sel === 'paper' && p1sel === 'rock') {
+            game.winningPlayer = 'Player 2'
+            game.winningName = player2.name
+        };
+
+        database.ref('/winningPlayer').set({
+            player: game.winningPlayer,
+            name: game.winningName
+        });
+
+        $('#results').text(`${game.winningName} wins.`)
+    },
+    restart: function () {
+        event.preventDefault();
+
+        //Reset the winning player
+        database.ref(`/winningPlayer`).set({
+            name: '',
+            country: ''
+        });
+
+        //Make player 1 not ready
+        database.ref(`player1/selection`).set({
+            isReady: false,
+            rpsChoice: '',
+        });
+
+        //Make player 2 not ready
+         database.ref(`player2/selection`).set({
+            isReady: false,
+            rpsChoice: '',
+        });
+
+        //Clear dropdown boxes
+        $('#player1selectionInput').val('')
+        $('#player2selectionInput').val('')
+    }
+}
+
+
 //#################################### INITIAL + CONTINUOUS READ FROM DATABASE #############################################
 
 //Process read
 database.ref().on("value", function (snapshot) {
 
     //Grab the data, save to variables
-    let player1name = snapshot.val().player1.info.name
-    let player1country = snapshot.val().player1.info.country
-    let player1selection = snapshot.val().player1.selection.rpsChoice
+    player1.name = snapshot.val().player1.info.name
+    player1.country = snapshot.val().player1.info.country
+    player1.selection = snapshot.val().player1.selection.rpsChoice
+    player1.isReady = snapshot.val().player1.selection.isReady
     p1sel = snapshot.val().player1.selection.rpsChoice
 
-    let player2name = snapshot.val().player2.info.name
-    let player2country = snapshot.val().player2.info.country
-    let player2selection = snapshot.val().player2.selection.rpsChoice
+    player2.name = snapshot.val().player2.info.name
+    player2.country = snapshot.val().player2.info.country
+    player2.selection = snapshot.val().player2.selection.rpsChoice
+    player2.isReady = snapshot.val().player2.selection.isReady
     p2sel = snapshot.val().player2.selection.rpsChoice
-    let winner = snapshot.val().winner.name
 
     //Analyze player actions
-    analyzeForWin()
+    game.analyzeForWin()
 
     //Put that info on the DOM
-    $("#player1information").text(`Player 1: ${player1name} of ${player1country} selects ${player1selection}.`);
-    $("#player1nameDisplay").text(`${player1name}`)
-    $("#player1countryDisplay").text(`${player1country}`)
-    $("#player1selectionDisplay").text(`${player1selection}`)
-
-    $("#player2information").text(`Player 2: ${player2name} of ${player2country} selects ${player2selection}.`);
-    $("#player2nameDisplay").text(`${player2name}`)
-    $("#player2countryDisplay").text(`${player2country}`)
-    $("#player2selectionDisplay").text(`${player2selection}`)
+    player1.updatePlayerInformationOnDatabaseOnHUD()
+    player2.updatePlayerInformationOnDatabaseOnHUD()
 
 }, function (error) {
     console.log("Error: " + error.code); // Catch errors
 });
 
-//#################################### WRITE TO DATABASE #############################################
 
-function updatePlayerInformation(number) {
-    event.preventDefault()
 
-    //Determine which document in Firebase to manipulate
-    let docToAlter = '/player' + number
 
-    //Dynamically establish the divs whose values will be grabbed
-    let nameInputToGrab = `#player${number}nameInput`
-    let countryInputToGrab = `#player${number}countryInput`
 
-    //Grab the values from the predetermined divs
-    let nameValue = $(nameInputToGrab).val().trim()
-    let countryValue = $(countryInputToGrab).val().trim()
 
-    //Update the appropriate document in Firebase with the supplied information
-    database.ref(`${docToAlter}/info`).set({
-        name: nameValue,
-        country: countryValue,
-    });
-};
 
-function updatePlayerChoice(number) {
-    event.preventDefault()
 
-    //Determine which document in Firebase to manipulate
-    let docToAlter = '/player' + number
 
-    //Dynamically establish the divs whose values will be grabbed
-    let selectionInputToGrab = `#player${number}selectionInput`
 
-    //Grab the values from the predetermined divs
-    let selectionValue = $(selectionInputToGrab).val().trim()
 
-    //Update the appropriate document in Firebase with the supplied information
-    database.ref(`${docToAlter}/selection`).set({
-        rpsChoice: selectionValue
-    });
-};
 
-//#################################### TRACK ACTIVE USERS #############################################
 
-function analyzeForWin() {
 
-    console.log('p1: ' + p1sel)
-    console.log('p2: ' + p2sel)
 
-    //Check for tie
-    if (p1sel === p2sel) {
-        winner = 'No one'
-    };
 
-    //See if player 1 wins
-    if (p1sel === 'rock' && p2sel === 'scissors') {
-        winner = 'Player 1'
-    } else if (p1sel === 'scissors' && p2sel === 'paper') {
-        winner = 'Player 1'
-    } else if (p1sel === 'paper' && p2sel === 'rock') {
-        winner = 'Player 1'
-    };
 
-    //See if player 2 wins
-    if (p2sel === 'rock' && p1sel === 'scissors') {
-        winner = 'Player 2'
-    } else if (p2sel === 'scissors' && p1sel === 'paper') {
-        winner = 'Player 2'
-    } else if (p2sel === 'paper' && p1sel === 'rock') {
-        winner = 'Player 2'
-    };
 
-    database.ref('/winner').set({
-        name: winner
-    });
 
-    $('#results').text(`${winner} wins.`)
 
-};
+
+
+
+
 
 //#################################### TRACK ACTIVE USERS #############################################
 
@@ -152,14 +233,3 @@ connectedReference.on("value", function (snapshot) {
         connections.onDisconnect().remove(); // ... and remove the user upon their disconnection.
     }
 });
-
-//Put that info on the DOM
-//$("#player1connectionID").text(`Player 1 Connection ID:`);
-//$("#player2connectionID").text(`Player 2 Connection ID:`);
-
-//Update count of active users
-database.ref('/activeUsers').on("value", function (snapshot) {
-    $('#activeUserCount').text(`Active User Count: ${snapshot.numChildren()}`)
-})
-
-console.log($('#player1selectionInput').val())

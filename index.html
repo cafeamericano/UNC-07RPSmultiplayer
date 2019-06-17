@@ -44,8 +44,9 @@
                     <div id='player1nameDisplay'></div>
                     <div id='player1countryDisplay'></div>
                     <div id='player1selectionDisplay'></div>
+                    <div id='player1isReadyDisplay'></div>
                 </div>
-                <form id='player1choiceForm' onsubmit="updatePlayerChoice(1)">
+                <form id='player1choiceForm' onsubmit="game.updatePlayerChoiceOnDatabase(1)">
                     <div class="form-group">
                         <select id='player1selectionInput' class='form-control' name="RPSselection">
                             <option disabled selected value> Choose a weapon</option>
@@ -57,7 +58,7 @@
                     <button type='submit' class='btn btn-primary'>Submit</button>
                 </form>
                 <hr>
-                <form id='player1updateForm' onsubmit="updatePlayerInformation(1)">
+                <form id='player1updateForm' onsubmit="game.updatePlayerInformationOnDatabase(1)">
                     <div class="form-group">
                         <input id='player1nameInput' class='form-control' placeholder="Name"></input>
                     </div>
@@ -79,6 +80,9 @@
                     <div id='results'></div>
                     <hr>
                 </div>
+                <form onsubmit="game.restart()">
+                    <button class='btn btn-primary'>Restart Game</button>
+                </form>
             </div>
 
             <!--Player 2-->
@@ -89,8 +93,9 @@
                     <div id='player2nameDisplay'></div>
                     <div id='player2countryDisplay'></div>
                     <div id='player2selectionDisplay'></div>
+                    <div id='player2isReadyDisplay'></div>
                 </div>
-                <form id='player2choiceForm' onsubmit="updatePlayerChoice(2)">
+                <form id='player2choiceForm' onsubmit="game.updatePlayerChoiceOnDatabase(2)">
                     <div class="form-group">
                         <select id='player2selectionInput' class='form-control' name="RPSselection">
                             <option disabled selected value> Choose a weapon</option>
@@ -102,7 +107,7 @@
                     <button type='submit' class='btn btn-primary'>Submit</button>
                 </form>
                 <hr>
-                <form id='player2updateForm' onsubmit="updatePlayerInformation(2)">
+                <form id='player2updateForm' onsubmit="game.updatePlayerInformationOnDatabase(2)">
                     <div class="form-group">
                         <input id='player2nameInput' class='form-control' placeholder="Name"></input>
                     </div>
