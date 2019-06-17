@@ -161,7 +161,8 @@ let game = {
             rpsChoice: '',
         });
 
-        //Clear dropdown boxes
+        //Clear dropdown boxes and results
+        $('#results').text('')
         $('#player1selectionInput').val('')
         $('#player2selectionInput').val('')
     }
@@ -187,7 +188,9 @@ database.ref().on("value", function (snapshot) {
     p2sel = snapshot.val().player2.selection.rpsChoice
 
     //Analyze player actions
-    game.analyzeForWin()
+    if (player1.isReady && player2.isReady) {
+        game.analyzeForWin()
+    }
 
     //Put that info on the DOM
     player1.updatePlayerInformationOnHUD()
