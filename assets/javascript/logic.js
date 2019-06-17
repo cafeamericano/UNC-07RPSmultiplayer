@@ -26,12 +26,12 @@ let p2sel;
 
 let player1 = {
     name: '',
-    country: '',
+    location: '',
     selection: '',
     isReady: false,
     updatePlayerInformationOnHUD: function () {
         $("#player1nameDisplay").text(`${this.name}`)
-        $("#player1countryDisplay").text(`${this.country}`)
+        $("#player1locationDisplay").text(`${this.location}`)
         //$("#player1selectionDisplay").text(`${this.selection}`)
         if (this.isReady) {
             $("#player1isReadyDisplay").text(`Selection made!`)
@@ -43,12 +43,12 @@ let player1 = {
 
 let player2 = {
     name: '',
-    country: '',
+    location: '',
     selection: '',
     isReady: false,
     updatePlayerInformationOnHUD: function () {
         $("#player2nameDisplay").text(`${this.name}`)
-        $("#player2countryDisplay").text(`${this.country}`)
+        $("#player2locationDisplay").text(`${this.location}`)
         //$("#player2selectionDisplay").text(`${this.selection}`)
         if (this.isReady) {
             $("#player2isReadyDisplay").text(`Selection made!`)
@@ -69,16 +69,16 @@ let game = {
 
         //Dynamically establish the divs whose values will be grabbed
         let nameInputToGrab = `#player${number}nameInput`
-        let countryInputToGrab = `#player${number}countryInput`
+        let locationInputToGrab = `#player${number}locationInput`
 
         //Grab the values from the predetermined divs
         let nameValue = $(nameInputToGrab).val().trim()
-        let countryValue = $(countryInputToGrab).val().trim()
+        let locationValue = $(locationInputToGrab).val().trim()
 
         //Update the appropriate document in Firebase with the supplied information
         database.ref(`${docToAlter}/info`).set({
             name: nameValue,
-            country: countryValue,
+            location: locationValue,
         });
     },
     updatePlayerChoiceOnDatabase(number) {
@@ -133,21 +133,15 @@ let game = {
             game.winningName = player2.name
         };
 
-        database.ref('/winningPlayer').set({
+        database.ref(`/game/results`).set({
+            name: game.winningName,
             player: game.winningPlayer,
-            name: game.winningName
+            resultText: `${player1.name} selected ${player1.selection}. ${player2.name} selected ${player2.selection}. ${game.winningName} won the game.`
         });
 
-        $('#results').text(`${player1.name} selected ${player1.selection}. ${player2.name} selected ${player2.selection}. ${game.winningName} won the game.`)
     },
     restart: function () {
         event.preventDefault();
-
-        //Reset the winning player
-        database.ref(`/winningPlayer`).set({
-            name: '',
-            country: ''
-        });
 
         //Make player 1 not ready
         database.ref(`player1/selection`).set({
@@ -165,6 +159,13 @@ let game = {
         $('#results').text('')
         $('#player1selectionInput').val('')
         $('#player2selectionInput').val('')
+
+        //Clear out the result information
+        database.ref(`game/results`).set({
+            name: '',
+            player: '',
+            resultText: ''
+        });
     }
 }
 
@@ -176,13 +177,13 @@ database.ref().on("value", function (snapshot) {
 
     //Grab the data, save to variables
     player1.name = snapshot.val().player1.info.name
-    player1.country = snapshot.val().player1.info.country
+    player1.location = snapshot.val().player1.info.location
     player1.selection = snapshot.val().player1.selection.rpsChoice
     player1.isReady = snapshot.val().player1.selection.isReady
     p1sel = snapshot.val().player1.selection.rpsChoice
 
     player2.name = snapshot.val().player2.info.name
-    player2.country = snapshot.val().player2.info.country
+    player2.location = snapshot.val().player2.info.location
     player2.selection = snapshot.val().player2.selection.rpsChoice
     player2.isReady = snapshot.val().player2.selection.isReady
     p2sel = snapshot.val().player2.selection.rpsChoice
@@ -200,6 +201,12 @@ database.ref().on("value", function (snapshot) {
     console.log("Error: " + error.code); // Catch errors
 });
 
+//Listen for result-specific changes
+database.ref('/game/results').on("value", function (snapshot) {
+    //Pull the result data, write it to the screen
+    let updatedResultData = snapshot.val().resultText
+    $('#results').text(updatedResultData)
+})
 
 
 

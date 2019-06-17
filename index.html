@@ -29,7 +29,7 @@
     <hr>
 
     <!--Player information shown on DOM-->
-    <main class='container'>
+    <main class='container-fluid'>
         <div class='row'>
 
             <!--Player 1-->
@@ -38,7 +38,7 @@
                 <hr>
                 <div id='player1display'>
                     <div id='player1nameDisplay'></div>
-                    <div id='player1countryDisplay'></div>
+                    <div id='player1locationDisplay'></div>
                     <div id='player1selectionDisplay'></div>
                     <div id='player1isReadyDisplay'></div>
                 </div>
@@ -60,7 +60,15 @@
                         <input id='player1nameInput' class='form-control' placeholder="Name"></input>
                     </div>
                     <div class="form-group">
-                        <input id='player1countryInput' class='form-control' placeholder="Country"></input>
+                        <select id='player1locationInput' class='form-control'>
+                            <option disabled selected value> Location </option>
+                            <option value="Africa">Africa</option>
+                            <option value="Asia">Asia</option>
+                            <option value="Australia">Australia</option>
+                            <option value="Europe">Europe</option>
+                            <option value="North America">North America</option>
+                            <option value="South America">South America</option>
+                        </select>
                     </div>
                     <button type='submit' class='btn btn-primary form-control'>Update</button>
                 </form>
@@ -78,13 +86,27 @@
                 </form>
             </div>
 
+            <!--
+            Chat Box
+            <div class='col'>
+                <h1 class='text-center'>Messages</h1>
+                <div class='card' style='height: 100%; width: 100%'>
+                    <div id='results'></div>
+                </div>
+                <br>
+                <form>
+                    <button class='btn btn-primary form-control'>Restart Game</button>
+                </form>
+            </div>
+            -->
+            
             <!--Player 2-->
             <div class='col text-center'>
                 <h1>Player 2</h1>
                 <hr>
                 <div id='player2display'>
                     <div id='player2nameDisplay'></div>
-                    <div id='player2countryDisplay'></div>
+                    <div id='player2locationDisplay'></div>
                     <div id='player2selectionDisplay'></div>
                     <div id='player2isReadyDisplay'></div>
                 </div>
@@ -106,7 +128,15 @@
                         <input id='player2nameInput' class='form-control' placeholder="Name"></input>
                     </div>
                     <div class="form-group">
-                        <input id='player2countryInput' class='form-control' placeholder="Country"></input>
+                        <select id='player2locationInput' class='form-control'>
+                            <option disabled selected value> Location </option>
+                            <option value="Africa">Africa</option>
+                            <option value="Asia">Asia</option>
+                            <option value="Australia">Australia</option>
+                            <option value="Europe">Europe</option>
+                            <option value="North America">North America</option>
+                            <option value="South America">South America</option>
+                        </select>
                     </div>
                     <button type='submit' class='btn btn-primary form-control'>Update</button>
                 </form>
