@@ -17,26 +17,106 @@
     <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-database.js"></script>
 
-    <title>Rock Paper Scissors</title>
+    <title>RPS Multiplayer</title>
+
+    <style>
+
+    </style>
 
 </head>
 
 <body>
-    <main></main>
-    <h1>Player 1</h1>
-    <form id='player1updateForm' onsubmit="updatePlayerInformation(1)">
-        <input id='player1nameInput' placeholder="Name"></input>
-        <input id='player1countryInput' placeholder="Country"></input>
-        <button type='submit'>Submit</button>
-    </form>
+
+    <!--Number of active users-->
+    <div id='activeUserCount'></div>
+
     <hr>
-    <h1>Player 2</h1>
-    <form id='player2updateForm' onsubmit="updatePlayerInformation(2)">
-        <input id='player2nameInput' placeholder="Name"></input>
-        <input id='player2countryInput' placeholder="Country"></input>
-        <button type='submit'>Submit</button>
-    </form>
+
+    <!--Player information shown on DOM-->
+    <main class='container'>
+        <div class='row'>
+
+            <!--Player 1-->
+            <div class='col'>
+                <h1>Player 1</h1>
+                <hr>
+                <div id='player1display'>
+                    <div id='player1nameDisplay'></div>
+                    <div id='player1countryDisplay'></div>
+                    <div id='player1selectionDisplay'></div>
+                </div>
+                <form id='player1choiceForm' onsubmit="updatePlayerChoice(1)">
+                    <div class="form-group">
+                        <select id='player1selectionInput' class='form-control' name="RPSselection">
+                            <option value="rock">Rock</option>
+                            <option value="paper">Paper</option>
+                            <option value="scissors">Scissors</option>
+                        </select>
+                    </div>
+                    <button type='submit' class='btn btn-primary'>Submit</button>
+                </form>
+                <hr>
+                <form id='player1updateForm' onsubmit="updatePlayerInformation(1)">
+                    <div class="form-group">
+                        <input id='player1nameInput' class='form-control' placeholder="Name"></input>
+                    </div>
+                    <div class="form-group">
+                        <input id='player1countryInput' class='form-control' placeholder="Country"></input>
+                    </div>
+                    <button type='submit' class='btn btn-primary'>Submit</button>
+                </form>
+            </div>
+
+            <!--Battleground-->
+            <div class='col'>
+                <h1>Battleground</h1>
+                <div class='card' style='height: 100%; width: 100%'>
+                    <div id='player1information'></div>
+                    <hr>
+                    <div id='player2information'></div>
+                    <hr>
+                    <div id='results'></div>
+                    <hr>
+                </div>
+            </div>
+
+            <!--Player 2-->
+            <div class='col'>
+                <h1>Player 2</h1>
+                <hr>
+                <div id='player2display'>
+                    <div id='player2nameDisplay'></div>
+                    <div id='player2countryDisplay'></div>
+                    <div id='player2selectionDisplay'></div>
+                </div>
+                <form id='player2choiceForm' onsubmit="updatePlayerChoice(2)">
+                    <div class="form-group">
+                        <select id='player2selectionInput' class='form-control' name="RPSselection">
+                            <option value="rock">Rock</option>
+                            <option value="paper">Paper</option>
+                            <option value="scissors">Scissors</option>
+                        </select>
+                    </div>
+                    <button type='submit' class='btn btn-primary'>Submit</button>
+                </form>
+                <hr>
+                <form id='player2updateForm' onsubmit="updatePlayerInformation(2)">
+                    <div class="form-group">
+                        <input id='player2nameInput' class='form-control' placeholder="Name"></input>
+                    </div>
+                    <div class="form-group">
+                        <input id='player2countryInput' class='form-control' placeholder="Country"></input>
+                    </div>
+                    <button type='submit' class='btn btn-primary'>Submit</button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!--Import JS file-->
     <script src='assets/javascript/logic.js'></script>
+
 </body>
 
 </html>
