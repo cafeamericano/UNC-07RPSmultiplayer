@@ -1,3 +1,7 @@
+let p1sel;
+let p2sel;
+let winner;
+
 //#################################### ESTABLISH DB CONNECTION #############################################
 
 // Your web app's Firebase configuration
@@ -26,13 +30,16 @@ database.ref().on("value", function (snapshot) {
     let player1name = snapshot.val().player1.info.name
     let player1country = snapshot.val().player1.info.country
     let player1selection = snapshot.val().player1.selection.rpsChoice
+    p1sel = snapshot.val().player1.selection.rpsChoice
+
     let player2name = snapshot.val().player2.info.name
     let player2country = snapshot.val().player2.info.country
     let player2selection = snapshot.val().player2.selection.rpsChoice
+    p2sel = snapshot.val().player2.selection.rpsChoice
     let winner = snapshot.val().winner.name
 
     //Analyze player actions
-    //analyzeForWin()
+    analyzeForWin()
 
     //Put that info on the DOM
     $("#player1information").text(`Player 1: ${player1name} of ${player1country} selects ${player1selection}.`);
@@ -44,8 +51,6 @@ database.ref().on("value", function (snapshot) {
     $("#player2nameDisplay").text(`${player2name}`)
     $("#player2countryDisplay").text(`${player2country}`)
     $("#player2selectionDisplay").text(`${player2selection}`)
-
-    $('#results').text(`${winner} wins.`)
 
 }, function (error) {
     console.log("Error: " + error.code); // Catch errors
@@ -95,9 +100,6 @@ function updatePlayerChoice(number) {
 //#################################### TRACK ACTIVE USERS #############################################
 
 function analyzeForWin() {
-    let p1sel = $('#player1selectionInput').val().trim()
-    let p2sel = $('#player2selectionInput').val().trim()
-    let winner;
 
     console.log('p1: ' + p1sel)
     console.log('p2: ' + p2sel)
@@ -128,6 +130,8 @@ function analyzeForWin() {
     database.ref('/winner').set({
         name: winner
     });
+
+    $('#results').text(`${winner} wins.`)
 
 };
 
