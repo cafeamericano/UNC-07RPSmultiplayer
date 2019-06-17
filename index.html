@@ -55,7 +55,7 @@
                             <option value="scissors">Scissors</option>
                         </select>
                     </div>
-                    <button type='submit' class='btn btn-primary'>Submit</button>
+                    <button type='submit' class='btn btn-primary'>Commit</button>
                 </form>
                 <hr>
                 <form id='player1updateForm' onsubmit="game.updatePlayerInformationOnDatabase(1)">
@@ -65,7 +65,7 @@
                     <div class="form-group">
                         <input id='player1countryInput' class='form-control' placeholder="Country"></input>
                     </div>
-                    <button type='submit' class='btn btn-primary'>Submit</button>
+                    <button type='submit' class='btn btn-primary'>Update</button>
                 </form>
             </div>
 
@@ -73,12 +73,7 @@
             <div class='col'>
                 <h1>Battleground</h1>
                 <div class='card' style='height: 100%; width: 100%'>
-                    <div id='player1information'></div>
-                    <hr>
-                    <div id='player2information'></div>
-                    <hr>
                     <div id='results'></div>
-                    <hr>
                 </div>
                 <form onsubmit="game.restart()">
                     <button class='btn btn-primary'>Restart Game</button>
@@ -104,7 +99,7 @@
                             <option value="scissors">Scissors</option>
                         </select>
                     </div>
-                    <button type='submit' class='btn btn-primary'>Submit</button>
+                    <button type='submit' class='btn btn-primary'>Commit</button>
                 </form>
                 <hr>
                 <form id='player2updateForm' onsubmit="game.updatePlayerInformationOnDatabase(2)">
@@ -114,7 +109,7 @@
                     <div class="form-group">
                         <input id='player2countryInput' class='form-control' placeholder="Country"></input>
                     </div>
-                    <button type='submit' class='btn btn-primary'>Submit</button>
+                    <button type='submit' class='btn btn-primary'>Update</button>
                 </form>
             </div>
 

@@ -29,12 +29,15 @@ let player1 = {
     country: '',
     selection: '',
     isReady: false,
-    updatePlayerInformationOnDatabaseOnHUD: function () {
-        $("#player1information").text(`Player 1: ${this.name} of ${this.country} selects ${this.selection}.`);
+    updatePlayerInformationOnHUD: function () {
         $("#player1nameDisplay").text(`${this.name}`)
         $("#player1countryDisplay").text(`${this.country}`)
-        $("#player1selectionDisplay").text(`${this.selection}`)
-        $("#player1isReadyDisplay").text(`${this.isReady}`)
+        //$("#player1selectionDisplay").text(`${this.selection}`)
+        if (this.isReady) {
+            $("#player1isReadyDisplay").text(`Selection made!`)
+        } else {
+            $("#player1isReadyDisplay").text(`Decision pending.`)
+        };
     }
 };
 
@@ -43,14 +46,16 @@ let player2 = {
     country: '',
     selection: '',
     isReady: false,
-    updatePlayerInformationOnDatabaseOnHUD: function () {
-        $("#player2information").text(`Player 2: ${this.name} of ${this.country} selects ${this.selection}.`);
+    updatePlayerInformationOnHUD: function () {
         $("#player2nameDisplay").text(`${this.name}`)
         $("#player2countryDisplay").text(`${this.country}`)
-        $("#player2selectionDisplay").text(`${this.selection}`)
-        $("#player2isReadyDisplay").text(`${this.isReady}`)
-    },
-
+        //$("#player2selectionDisplay").text(`${this.selection}`)
+        if (this.isReady) {
+            $("#player2isReadyDisplay").text(`Selection made!`)
+        } else {
+            $("#player2isReadyDisplay").text(`Decision pending.`)
+        };
+    }
 };
 
 let game = {
@@ -133,7 +138,7 @@ let game = {
             name: game.winningName
         });
 
-        $('#results').text(`${game.winningName} wins.`)
+        $('#results').text(`${player1.name} selected ${player1.selection}. ${player2.name} selected ${player2.selection}. ${game.winningName} won the game.`)
     },
     restart: function () {
         event.preventDefault();
@@ -151,7 +156,7 @@ let game = {
         });
 
         //Make player 2 not ready
-         database.ref(`player2/selection`).set({
+        database.ref(`player2/selection`).set({
             isReady: false,
             rpsChoice: '',
         });
@@ -185,8 +190,8 @@ database.ref().on("value", function (snapshot) {
     game.analyzeForWin()
 
     //Put that info on the DOM
-    player1.updatePlayerInformationOnDatabaseOnHUD()
-    player2.updatePlayerInformationOnDatabaseOnHUD()
+    player1.updatePlayerInformationOnHUD()
+    player2.updatePlayerInformationOnHUD()
 
 }, function (error) {
     console.log("Error: " + error.code); // Catch errors
