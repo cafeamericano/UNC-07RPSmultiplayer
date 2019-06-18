@@ -238,11 +238,11 @@ function postMessage(number) {
 
     $(selectionInputToGrab).val('')
 
-    logMessageToDatabase(selectionValue);
+    logMessageToDatabase(selectionValue, number);
 
 };
 
-function logMessageToDatabase(message) {
+function logMessageToDatabase(message, senderNumber) {
 
     //Grab the message count value fromt he database
     database.ref('messages/count').once('value').then(function (snapshot) {
@@ -250,8 +250,9 @@ function logMessageToDatabase(message) {
         let count = total;
 
         //Write to DB
+        let sendingPlayer = 'Player ' + senderNumber
         database.ref('messages/log').update({
-            [count]: message,
+            [count]: { message, sendingPlayer },
         });
 
         //Then increment count
@@ -261,6 +262,33 @@ function logMessageToDatabase(message) {
 
     });
 
+};
+
+function updateMessages() {
+    event.preventDefault()
+    $('#allMessageLog').empty()
+    database.ref('messages/log').once('value').then(function (snapshot) {
+        let obj = snapshot.val()
+        console.log(obj)
+        console.log(obj.length)
+        let arr = Object.keys(obj)
+        console.log(arr)
+        
+        console.log(obj[10].message)
+        console.log(obj[10].sendingPlayer);
+
+        //Determine first and last record
+        let firstRecord = Number(arr[0]);
+        let lastRecord = Number(arr.slice(-1)[0]);
+        console.log(firstRecord)
+        console.log(lastRecord)
+
+        //Run the loop
+        for (var i=firstRecord; i < lastRecord + 1; i++) {
+            $('#allMessageLog').prepend(obj[i].message)
+        };
+
+    })
 };
 
 
