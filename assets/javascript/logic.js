@@ -197,6 +197,7 @@ database.ref().on("value", function (snapshot) {
     //Put that info on the DOM
     player1.updatePlayerInformationOnHUD()
     player2.updatePlayerInformationOnHUD()
+    updateMessages()
 
 }, function (error) {
     console.log("Error: " + error.code); // Catch errors
@@ -210,13 +211,8 @@ database.ref('/game/results').on("value", function (snapshot) {
 })
 
 //Listen for message-specific changes
-database.ref('/messages').on("value", function (snapshot) {
-    //Pull the result data, write it to the screen
-    let player1activeMessage = snapshot.val().player1.message
-    let player2activeMessage = snapshot.val().player2.message
-    $('#player1activeMessage').text(player1activeMessage)
-    $('#player2activeMessage').text(player2activeMessage)
-})
+// database.ref('/messages').on("value", function (snapshot) {
+// })
 
 //###########################################################################################
 function postMessage(number) {
@@ -266,26 +262,21 @@ function logMessageToDatabase(message, senderNumber) {
 
 function updateMessages() {
     event.preventDefault()
-    $('#allMessageLog').empty()
     database.ref('messages/log').once('value').then(function (snapshot) {
         let obj = snapshot.val()
-        console.log(obj)
-        console.log(obj.length)
         let arr = Object.keys(obj)
-        console.log(arr)
-        
-        console.log(obj[10].message)
-        console.log(obj[10].sendingPlayer);
-
+     
         //Determine first and last record
         let firstRecord = Number(arr[0]);
         let lastRecord = Number(arr.slice(-1)[0]);
-        console.log(firstRecord)
-        console.log(lastRecord)
 
-        //Run the loop
+        //Clear what's there, then run the loop
+        $('#allMessageLog').empty()
         for (var i=firstRecord; i < lastRecord + 1; i++) {
-            $('#allMessageLog').prepend(obj[i].message)
+            let messageToPost = obj[i].message
+            let sender = obj[i].sendingPlayer
+            $('#allMessageLog').append(`<strong>${sender}</strong>`)
+            $('#allMessageLog').append(`<div>${messageToPost}</div>`)
         };
 
     })
