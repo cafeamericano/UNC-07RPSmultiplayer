@@ -275,9 +275,21 @@ function updateMessages() {
         for (var i=firstRecord; i < lastRecord + 1; i++) {
             let messageToPost = obj[i].message
             let sender = obj[i].sendingPlayer
-            $('#allMessageLog').append(`<strong>${sender}</strong>`)
-            $('#allMessageLog').append(`<div>${messageToPost}</div>`)
-            $('#allMessageLog').append(`<hr>`)
+
+            let newBlock = $('<div>')
+            if (sender === 'Player 1') {
+                $(newBlock).css({'text-align': 'left'})
+                $(newBlock).addClass('alert alert-primary')
+            } else {
+                $(newBlock).css({'text-align': 'right'})
+                $(newBlock).addClass('alert alert-success')
+            }
+            newBlock.append(`<strong>${sender}</strong>`)
+            newBlock.append(`<div>${messageToPost}</div>`)
+            $('#allMessageLog').prepend(newBlock)
+
+            // $('#allMessageLog').append(`<strong>${sender}</strong>`)
+            // $('#allMessageLog').append(`<div>${messageToPost}</div>`)
         };
 
     })
