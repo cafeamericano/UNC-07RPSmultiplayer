@@ -1,4 +1,6 @@
-//#################################### ESTABLISH DB CONNECTION #############################################
+//##########################################################################################################################
+//############################################## ESTABLISH DB CONNECTION ###################################################
+//##########################################################################################################################
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
@@ -17,22 +19,26 @@ firebase.initializeApp(firebaseConfig);
 // Reference to the database
 var database = firebase.database();
 
-//#################################### GLOBAL VARIABLES #############################################
+//##########################################################################################################################
+//######################################### OBJECTS AND GLOBAL VARIABLES ###################################################
+//##########################################################################################################################
 
 let p1sel;
 let p2sel;
 let messageCountTotal;
 
-//#################################### OBJECTS #############################################
-
 let player1 = {
     name: '',
     location: '',
     selection: '',
+    winCount: 0,
+    lossCount: 0,
     isReady: false,
     updatePlayerInformationOnHUD: function () {
         $("#player1nameDisplay").text(`${this.name}`)
         $("#player1locationDisplay").text(`${this.location}`)
+        $("#player1winsCount").text(`Wins: ${this.winCount}`)
+        $("#player1lossCount").text(`Losses: ${this.lossCount}`)
         //$("#player1selectionDisplay").text(`${this.selection}`)
         if (this.isReady) {
             $("#player1isReadyDisplay").text(`Selection made!`)
@@ -46,10 +52,14 @@ let player2 = {
     name: '',
     location: '',
     selection: '',
+    winCount: 0,
+    lossCount: 0,
     isReady: false,
     updatePlayerInformationOnHUD: function () {
         $("#player2nameDisplay").text(`${this.name}`)
         $("#player2locationDisplay").text(`${this.location}`)
+        $("#player2winsCount").text(`Wins: ${this.winCount}`)
+        $("#player2lossCount").text(`Losses: ${this.lossCount}`)
         //$("#player2selectionDisplay").text(`${this.selection}`)
         if (this.isReady) {
             $("#player2isReadyDisplay").text(`Selection made!`)
@@ -140,6 +150,41 @@ let game = {
             resultText: `${player1.name} selected ${player1.selection}. ${player2.name} selected ${player2.selection}. ${game.winningName} won the game.`
         });
 
+        //If analysis for win is viable, both players should return to unready status
+        player1.isReady = false;
+        player2.isReady = false;
+
+        //Show who won
+        console.log(game.winningPlayer)
+
+    },
+    applyRewardAndPunishment: function (winner) {
+        database.ref('player1').once('value').then(function (p1snapshot) {
+            database.ref('player2').once('value').then(function (p2snapshot) {
+
+                player1Wins = p1snapshot.val().wins.count
+                player1Losses = p1snapshot.val().losses.count
+                player2Wins = p2snapshot.val().wins.count
+                player2Losses = p2snapshot.val().losses.count
+
+                if (winner === 'Player 1') {
+                    database.ref('player1/wins').update({
+                        count: player1Wins + 1
+                    }); database.ref('player2/losses').update({
+                        count: player2Losses + 1
+                    });
+                };
+
+                if (winner === 'Player 2') {
+                    database.ref('player2/wins').update({
+                        count: player2Wins + 1
+                    }); database.ref('player1/losses').update({
+                        count: player1Losses + 1
+                    });
+                };
+
+            });
+        });
     },
     restart: function () {
         event.preventDefault();
@@ -167,11 +212,95 @@ let game = {
             player: '',
             resultText: ''
         });
+
+        //Return the winning player to nobody
+        database.ref(`winningPlayer`).update({
+            name: '',
+            player: '',
+        });
+
+        console.log(game.winningPlayer)
+
     }
-}
+};
 
+let messages = {
+    postMessage: function (number) {
+        event.preventDefault()
 
+        //Determine which document in Firebase to manipulate
+        let docToAlter = 'messages/player' + number
+
+        //Dynamically establish the divs whose values will be grabbed
+        let selectionInputToGrab = `#player${number}messageInput`
+
+        //Grab the values from the predetermined divs
+        let selectionValue = $(selectionInputToGrab).val().trim()
+
+        //Update the appropriate document in Firebase with the supplied information
+        database.ref(docToAlter).set({
+            message: selectionValue
+        });
+
+        $(selectionInputToGrab).val('')
+
+        this.logMessageToDatabase(selectionValue, number);
+    },
+    logMessageToDatabase: function (message, senderNumber) {
+        //Grab the message count value fromt he database
+        database.ref('messages/count').once('value').then(function (snapshot) {
+            let total = snapshot.val().total
+            let count = total;
+
+            //Write to DB
+            let sendingPlayer = 'Player ' + senderNumber
+            database.ref('messages/log').update({
+                [count]: { message, sendingPlayer },
+            });
+
+            //Then increment count
+            database.ref('messages/count').update({
+                total: total + 1
+            });
+
+        });
+    },
+    updateMessages: function () {
+        event.preventDefault()
+        database.ref('messages/log').once('value').then(function (snapshot) {
+            let obj = snapshot.val()
+            let arr = Object.keys(obj)
+
+            //Determine first and last record
+            let firstRecord = Number(arr[0]);
+            let lastRecord = Number(arr.slice(-1)[0]);
+
+            //Clear what's there, then run the loop
+            $('#allMessageLog').empty()
+            for (var i = firstRecord; i < lastRecord + 1; i++) {
+                let messageToPost = obj[i].message
+                let sender = obj[i].sendingPlayer
+
+                let newBlock = $('<div>')
+                if (sender === 'Player 1') {
+                    $(newBlock).css({ 'text-align': 'left' })
+                    $(newBlock).addClass('alert alert-primary')
+                } else {
+                    $(newBlock).css({ 'text-align': 'right' })
+                    $(newBlock).addClass('alert alert-success')
+                }
+                newBlock.append(`<strong>${sender}</strong>`)
+                newBlock.append(`<div>${messageToPost}</div>`)
+                $('#allMessageLog').prepend(newBlock)
+            };
+        })
+    },
+
+};
+
+//##########################################################################################################################
 //#################################### INITIAL + CONTINUOUS READ FROM DATABASE #############################################
+//##########################################################################################################################
 
 //Process read
 database.ref().on("value", function (snapshot) {
@@ -181,12 +310,16 @@ database.ref().on("value", function (snapshot) {
     player1.location = snapshot.val().player1.info.location
     player1.selection = snapshot.val().player1.selection.rpsChoice
     player1.isReady = snapshot.val().player1.selection.isReady
+    player1.winCount = snapshot.val().player1.wins.count
+    player1.lossCount = snapshot.val().player1.losses.count
     p1sel = snapshot.val().player1.selection.rpsChoice
 
     player2.name = snapshot.val().player2.info.name
     player2.location = snapshot.val().player2.info.location
     player2.selection = snapshot.val().player2.selection.rpsChoice
     player2.isReady = snapshot.val().player2.selection.isReady
+    player2.winCount = snapshot.val().player2.wins.count
+    player2.lossCount = snapshot.val().player2.losses.count
     p2sel = snapshot.val().player2.selection.rpsChoice
 
     //Analyze player actions
@@ -197,7 +330,7 @@ database.ref().on("value", function (snapshot) {
     //Put that info on the DOM
     player1.updatePlayerInformationOnHUD()
     player2.updatePlayerInformationOnHUD()
-    updateMessages()
+    messages.updateMessages()
 
 }, function (error) {
     console.log("Error: " + error.code); // Catch errors
@@ -208,92 +341,7 @@ database.ref('/game/results').on("value", function (snapshot) {
     //Pull the result data, write it to the screen
     let updatedResultData = snapshot.val().resultText
     $('#results').text(updatedResultData)
-})
-
-//Listen for message-specific changes
-// database.ref('/messages').on("value", function (snapshot) {
-// })
-
-//###########################################################################################
-function postMessage(number) {
-    event.preventDefault()
-
-    //Determine which document in Firebase to manipulate
-    let docToAlter = 'messages/player' + number
-
-    //Dynamically establish the divs whose values will be grabbed
-    let selectionInputToGrab = `#player${number}messageInput`
-
-    //Grab the values from the predetermined divs
-    let selectionValue = $(selectionInputToGrab).val().trim()
-
-    //Update the appropriate document in Firebase with the supplied information
-    database.ref(docToAlter).set({
-        message: selectionValue
-    });
-
-    $(selectionInputToGrab).val('')
-
-    logMessageToDatabase(selectionValue, number);
-
-};
-
-function logMessageToDatabase(message, senderNumber) {
-
-    //Grab the message count value fromt he database
-    database.ref('messages/count').once('value').then(function (snapshot) {
-        let total = snapshot.val().total
-        let count = total;
-
-        //Write to DB
-        let sendingPlayer = 'Player ' + senderNumber
-        database.ref('messages/log').update({
-            [count]: { message, sendingPlayer },
-        });
-
-        //Then increment count
-        database.ref('messages/count').update({
-            total: total + 1
-        });
-
-    });
-
-};
-
-function updateMessages() {
-    event.preventDefault()
-    database.ref('messages/log').once('value').then(function (snapshot) {
-        let obj = snapshot.val()
-        let arr = Object.keys(obj)
-     
-        //Determine first and last record
-        let firstRecord = Number(arr[0]);
-        let lastRecord = Number(arr.slice(-1)[0]);
-
-        //Clear what's there, then run the loop
-        $('#allMessageLog').empty()
-        for (var i=firstRecord; i < lastRecord + 1; i++) {
-            let messageToPost = obj[i].message
-            let sender = obj[i].sendingPlayer
-
-            let newBlock = $('<div>')
-            if (sender === 'Player 1') {
-                $(newBlock).css({'text-align': 'left'})
-                $(newBlock).addClass('alert alert-primary')
-            } else {
-                $(newBlock).css({'text-align': 'right'})
-                $(newBlock).addClass('alert alert-success')
-            }
-            newBlock.append(`<strong>${sender}</strong>`)
-            newBlock.append(`<div>${messageToPost}</div>`)
-            $('#allMessageLog').prepend(newBlock)
-
-            // $('#allMessageLog').append(`<strong>${sender}</strong>`)
-            // $('#allMessageLog').append(`<div>${messageToPost}</div>`)
-        };
-
-    })
-};
+});
 
 
 

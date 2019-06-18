@@ -41,6 +41,8 @@
                     <div id='player1locationDisplay'></div>
                     <div id='player1selectionDisplay'></div>
                     <div id='player1isReadyDisplay'></div>
+                    <div id='player1winsCount'>Wins: </div>
+                    <div id='player1lossCount'>Losses: </div>
                 </div>
                 <br>
                 <form id='player1choiceForm' onsubmit="game.updatePlayerChoiceOnDatabase(1)">
@@ -73,7 +75,7 @@
                     <button type='submit' class='btn btn-success form-control'>Update</button>
                 </form>
                 <hr>
-                <form id='player1messageForm' onsubmit="postMessage(1)">
+                <form id='player1messageForm' onsubmit="messages.postMessage(1)">
                     <div class="form-group">
                         <input id='player1messageInput' class='form-control' placeholder="Send a message"></input>
                     </div>
@@ -99,7 +101,7 @@
                     <div id='allMessageLog' class='p-2'></div>
                 </div>
                 <br>
-                <form onsubmit="updateMessages()">
+                <form onsubmit="messages.updateMessages()">
                     <button class='btn btn-danger form-control'>Clear Messages</button>
                 </form>
             </div>
@@ -113,6 +115,8 @@
                     <div id='player2locationDisplay'></div>
                     <div id='player2selectionDisplay'></div>
                     <div id='player2isReadyDisplay'></div>
+                    <div id='player2winsCount'>Wins: </div>
+                    <div id='player2lossCount'>Losses: </div>
                 </div>
                 <br>
                 <form id='player2choiceForm' onsubmit="game.updatePlayerChoiceOnDatabase(2)">
@@ -145,7 +149,7 @@
                     <button type='submit' class='btn btn-success form-control'>Update</button>
                 </form>
                 <hr>
-                <form id='player2messageForm' onsubmit="postMessage(2)">
+                <form id='player2messageForm' onsubmit="messages.postMessage(2)">
                     <div class="form-group">
                         <input id='player2messageInput' class='form-control' placeholder="Send a message"></input>
                     </div>
