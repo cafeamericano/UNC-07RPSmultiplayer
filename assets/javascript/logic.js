@@ -159,6 +159,7 @@ let game = {
 
     },
     analyzeForWin: function () {
+        console.log('Running analyze for win function')
 
         //Check for tie
         if (player1.selection === player2.selection) {
@@ -170,6 +171,7 @@ let game = {
         if (player1.selection === 'rock' && player2.selection === 'scissors') {
             game.winningPlayer = 'Player 1'
             game.winningName = player1.name
+            player1.winCount += 1
         } else if (player1.selection === 'scissors' && player2.selection === 'paper') {
             game.winningPlayer = 'Player 1'
             game.winningName = player1.name
@@ -191,10 +193,17 @@ let game = {
         };
 
         game.resultText = `${player1.name} chose ${player1.selection}. ${player2.name} chose ${player2.selection}. ${game.winningName} won the game.`
+        game.syncToDatabase()
 
+        console.log(player1.selection)
+        console.log(player1.isReady)
+        console.log(player2.selection)
+        console.log(player2.isReady)
+
+        player1.isReady = false
+        player2.isReady = false
         player1.syncToDatabase()
         player2.syncToDatabase()
-        game.syncToDatabase()
 
     },
     restart: function () {
@@ -216,7 +225,7 @@ let game = {
     },
     cleanRestart() {
 
-        //This must be done once for every object synced with Firebase
+        //Experimentation demonstrates this must be done once for every object synced with Firebase
         this.restart();
         this.restart();
         this.restart();
@@ -313,13 +322,16 @@ database.ref().on("value", function (snapshot) {
     //Analyze player actions
     if (player1.isReady && player2.isReady) {
         game.analyzeForWin()
-    }
+    };
 
     //Put that info on the DOM
     player1.updatePlayerInformationOnHUD()
     player2.updatePlayerInformationOnHUD()
     game.updateResultsOnDOM()
     messages.updateMessages()
+
+    console.log(player1.isReady)
+    console.log(player2.isReady)
 
 }, function (error) {
     console.log("Error: " + error.code); // Catch errors
