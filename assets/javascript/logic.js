@@ -325,6 +325,16 @@ $(document).on("click", "#chatToggler", function () {
     messages.toggleMessagesDisplay()
 })
 
+$('#editPlayer1infoPanel').hide()
+$(document).on("click", "#editPlayer1infoToggler", function () {
+    $('#editPlayer1infoPanel').slideToggle()
+})
+
+$('#editPlayer1selectionPanel').hide()
+$(document).on("click", "#editPlayer1selectionToggler", function () {
+    $('#editPlayer1selectionPanel').slideToggle()
+})
+
 //##########################################################################################################################
 //#################################### INITIAL + CONTINUOUS READ FROM DATABASE #############################################
 //##########################################################################################################################
