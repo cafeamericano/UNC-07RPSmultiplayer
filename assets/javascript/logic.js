@@ -335,6 +335,16 @@ $(document).on("click", "#editPlayer1selectionToggler", function () {
     $('#editPlayer1selectionPanel').slideToggle()
 })
 
+$('#editPlayer2infoPanel').hide()
+$(document).on("click", "#editPlayer2infoToggler", function () {
+    $('#editPlayer2infoPanel').slideToggle()
+})
+
+$('#editPlayer2selectionPanel').hide()
+$(document).on("click", "#editPlayer2selectionToggler", function () {
+    $('#editPlayer2selectionPanel').slideToggle()
+})
+
 //##########################################################################################################################
 //#################################### INITIAL + CONTINUOUS READ FROM DATABASE #############################################
 //##########################################################################################################################
@@ -387,7 +397,8 @@ function rewardWinner(winner) {
 
 $('#player1nameDisplay').css({'font-size': '30px'})
 $('#player1nameDisplay').css({'font-weight': '800'})
-
+$('#player2nameDisplay').css({'font-size': '30px'})
+$('#player2nameDisplay').css({'font-weight': '800'})
 
 
 

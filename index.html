@@ -160,56 +160,103 @@
 
             <!--Player 2-->
             <div class='col text-center'>
-                <h1>Player 2</h1>
-                <hr>
-                <div id='player2display' class='text-right'>
-                    <div id='player2nameDisplay'></div>
-                    <div id='player2locationDisplay'></div>
-                    <div id='player2selectionDisplay'></div>
-                    <div id='player2isReadyDisplay'></div>
-                    <div id='player2winsCount'>Wins: </div>
-                    <div id='player2lossCount'>Losses: </div>
-                </div>
-                <br>
-                <form id='player2choiceForm' onsubmit="game.updatePlayerChoiceOnDatabase(2)">
-                    <div class="form-group">
-                        <select id='player2selectionInput' class='form-control' name="RPSselection">
-                            <option disabled selected value> Choose a weapon</option>
-                            <option value="rock">Rock</option>
-                            <option value="paper">Paper</option>
-                            <option value="scissors">Scissors</option>
-                        </select>
-                    </div>
-                    <button type='submit' class='btn btn-primary form-control'>Commit</button>
-                </form>
-                <hr>
-                <form id='player2updateForm' onsubmit="game.updatePlayerInformationOnDatabase(2)">
-                    <div class="form-group">
-                        <input id='player2nameInput' class='form-control' placeholder="Name"></input>
-                    </div>
-                    <div class="form-group">
-                        <select id='player2locationInput' class='form-control'>
-                            <option disabled selected value> Location </option>
-                            <option value="Africa">Africa</option>
-                            <option value="Asia">Asia</option>
-                            <option value="Australia">Australia</option>
-                            <option value="Europe">Europe</option>
-                            <option value="North America">North America</option>
-                            <option value="South America">South America</option>
-                        </select>
-                    </div>
-                    <button type='submit' class='btn btn-success form-control'>Update</button>
-                </form>
-                <hr>
-                <form id='player2messageForm' onsubmit="messages.postMessage(2)">
-                    <div class="form-group">
-                        <input id='player2messageInput' class='form-control' placeholder="Send a message"></input>
-                    </div>
-                    <button type='submit' class='btn btn-warning form-control'>Update</button>
-                </form>
-            </div>
+                <!--###################PLAYER CARD###################-->
+                <div class='alert-primary card col'>
 
-        </div>
+                    <!--Basic Information-->
+                    <h6 class='text-center pt-2'>Player 2</h6>
+                    <h2 id='player2nameDisplay' class='text-center'>Player Name</h2>
+                    <h6 id='player2locationDisplay' class='text-center'>Location</h6>
+                    <hr>
+
+                    <!--Wins and losses-->
+                    <div class='row'>
+                        <div id='player2winsCount' class='col'>Wins</div>
+                        <div id='player2lossCount' class='col'>Losses</div>
+                    </div>
+                    <hr>
+
+                    <!--Message send box-->
+                    <div class='row'>
+                        <div class='col'>
+                            <form id='player2messageForm' class='row' onsubmit="messages.postMessage(2)">
+                                <div class="col-9">
+                                    <input id='player2messageInput' class='form-control'
+                                        placeholder="Send a message"></input>
+                                </div>
+                                <button type='submit' class='btn alert-primary col-2'><i
+                                        class="fas fa-share-square"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!--Edit info toggler-->
+                    <div class='row'>
+                        <div id='editPlayer2infoToggler' class='col text-left'>
+                            <i class="fas fa-user fa-lg m-2"></i>
+                            Edit Player Information
+                        </div>
+                    </div>
+
+                    <!--Edit info panel-->
+                    <div id='editPlayer2infoPanel' class='row p-2'>
+                        <div class='col text-left'>
+                            <form id='player2updateForm' onsubmit="game.updatePlayerInformationOnDatabase(2)">
+                                <div class="form-group">
+                                    <input id='player2nameInput' class='form-control' placeholder="Name"></input>
+                                </div>
+                                <div class="form-group">
+                                    <select id='player2locationInput' class='form-control'>
+                                        <option disabled selected value> Location </option>
+                                        <option value="Africa">Africa</option>
+                                        <option value="Asia">Asia</option>
+                                        <option value="Australia">Australia</option>
+                                        <option value="Europe">Europe</option>
+                                        <option value="North America">North America</option>
+                                        <option value="South America">South America</option>
+                                    </select>
+                                </div>
+                                <button type='submit' class='btn btn-primary form-control'>Update</button>
+                            </form>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!--Make selection toggler-->
+                    <div class='row'>
+                        <div id='editPlayer2selectionToggler' class='col text-left'>
+                            <i class="fas fa-cut fa-lg m-2"></i>
+                            Select a Weapon
+                        </div>
+                    </div>
+
+                    <!--Make selection panel-->
+                    <div id='editPlayer2selectionPanel' class='row p-2'>
+                        <div class='col text-left'>
+                            <form id='player2choiceForm' onsubmit="game.updatePlayerChoiceOnDatabase(2)">
+                                <div class="form-group">
+                                    <select id='player2selectionInput' class='form-control' name="RPSselection">
+                                        <option disabled selected value> Choose a weapon</option>
+                                        <option value="rock">Rock</option>
+                                        <option value="paper">Paper</option>
+                                        <option value="scissors">Scissors</option>
+                                    </select>
+                                </div>
+                                <button type='submit' class='btn btn-primary form-control'>Commit</button>
+                            </form>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!--isReady Display-->
+                    <div class='row'>
+                        <div id='player2isReadyDisplay' class='col text-left p-2'> </div>
+                    </div>
+
+                </div>
+
+            </div>
 
     </main>
 
