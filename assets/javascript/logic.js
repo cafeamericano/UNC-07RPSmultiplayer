@@ -321,26 +321,29 @@ let messages = {
 
 //Event Display
 
+$(document).ready(function(){
+    $('#editPlayer1infoPanel').hide()
+    $('#editPlayer1selectionPanel').hide()
+    $('#editPlayer2infoPanel').hide()
+    $('#editPlayer2selectionPanel').hide()
+})
+
 $(document).on("click", "#chatToggler", function () {
     messages.toggleMessagesDisplay()
 })
 
-$('#editPlayer1infoPanel').hide()
 $(document).on("click", "#editPlayer1infoToggler", function () {
     $('#editPlayer1infoPanel').slideToggle()
 })
 
-$('#editPlayer1selectionPanel').hide()
 $(document).on("click", "#editPlayer1selectionToggler", function () {
     $('#editPlayer1selectionPanel').slideToggle()
 })
 
-$('#editPlayer2infoPanel').hide()
 $(document).on("click", "#editPlayer2infoToggler", function () {
     $('#editPlayer2infoPanel').slideToggle()
 })
 
-$('#editPlayer2selectionPanel').hide()
 $(document).on("click", "#editPlayer2selectionToggler", function () {
     $('#editPlayer2selectionPanel').slideToggle()
 })
