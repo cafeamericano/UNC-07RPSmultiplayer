@@ -23,8 +23,6 @@ var database = firebase.database();
 //######################################### OBJECTS AND GLOBAL VARIABLES ###################################################
 //##########################################################################################################################
 
-let p1sel;
-let p2sel;
 let messageCountTotal;
 
 let player1 = {
@@ -34,6 +32,24 @@ let player1 = {
     winCount: 0,
     lossCount: 0,
     isReady: false,
+    syncFromDatabase(snapshot) {
+        player1.name = snapshot.val().player1.name
+        player1.location = snapshot.val().player1.location
+        player1.selection = snapshot.val().player1.selection
+        player1.winCount = snapshot.val().player1.winCount
+        player1.lossCount = snapshot.val().player1.lossCount
+        player1.isReady = snapshot.val().player1.isReady
+    },
+    syncToDatabase() {
+        database.ref('/player1').update({
+            name: this.name,
+            location: this.location,
+            selection: this.selection,
+            winCount: this.winCount,
+            lossCount: this.lossCount,
+            isReady: this.isReady
+        });
+    },
     updatePlayerInformationOnHUD: function () {
         $("#player1nameDisplay").text(`${this.name}`)
         $("#player1locationDisplay").text(`${this.location}`)
@@ -55,6 +71,24 @@ let player2 = {
     winCount: 0,
     lossCount: 0,
     isReady: false,
+    syncFromDatabase(snapshot) {
+        player2.name = snapshot.val().player2.name
+        player2.location = snapshot.val().player2.location
+        player2.selection = snapshot.val().player2.selection
+        player2.winCount = snapshot.val().player2.winCount
+        player2.lossCount = snapshot.val().player2.lossCount
+        player2.isReady = snapshot.val().player2.isReady
+    },
+    syncToDatabase() {
+        database.ref('/player2').update({
+            name: this.name,
+            location: this.location,
+            selection: this.selection,
+            winCount: this.winCount,
+            lossCount: this.lossCount,
+            isReady: this.isReady
+        });
+    },
     updatePlayerInformationOnHUD: function () {
         $("#player2nameDisplay").text(`${this.name}`)
         $("#player2locationDisplay").text(`${this.location}`)
@@ -72,154 +106,120 @@ let player2 = {
 let game = {
     winningPlayer: '',
     winningName: '',
+    resultText: '',
+    syncFromDatabase(snapshot) {
+        this.winningPlayer = snapshot.val().game.winningPlayer
+        this.winningName = snapshot.val().game.winningName
+        this.resultText = snapshot.val().game.resultText
+    },
+    syncToDatabase() {
+        database.ref('/game').update({
+            winningPlayer: this.winningPlayer,
+            winningName: this.winningName,
+            resultText: this.resultText
+        });
+    },
+    updateResultsOnDOM() {
+        //console.log(this.resultText)
+        $('#results').text(game.resultText)
+    },
     updatePlayerInformationOnDatabase(number) {
         event.preventDefault()
-
-        //Determine which document in Firebase to manipulate
-        let docToAlter = '/player' + number
-
-        //Dynamically establish the divs whose values will be grabbed
         let nameInputToGrab = `#player${number}nameInput`
         let locationInputToGrab = `#player${number}locationInput`
 
-        //Grab the values from the predetermined divs
-        let nameValue = $(nameInputToGrab).val().trim()
-        let locationValue = $(locationInputToGrab).val().trim()
+        if (number === 1) {
+            player1.name = $(nameInputToGrab).val().trim()
+            player1.location = $(locationInputToGrab).val().trim()
+        } else if (number === 2) {
+            player2.name = $(nameInputToGrab).val().trim()
+            player2.location = $(locationInputToGrab).val().trim()
+        }
 
-        //Update the appropriate document in Firebase with the supplied information
-        database.ref(`${docToAlter}/info`).set({
-            name: nameValue,
-            location: locationValue,
-        });
+        player1.syncToDatabase()
+        player2.syncToDatabase()
+        game.syncToDatabase()
+
     },
     updatePlayerChoiceOnDatabase(number) {
         event.preventDefault()
-
-        //Determine which document in Firebase to manipulate
-        let docToAlter = '/player' + number
-
-        //Dynamically establish the divs whose values will be grabbed
         let selectionInputToGrab = `#player${number}selectionInput`
 
-        //Grab the values from the predetermined divs
-        let selectionValue = $(selectionInputToGrab).val().trim()
+        if (number === 1) {
+            player1.selection = $(selectionInputToGrab).val().trim()
+            player1.isReady = true
+        } else if (number === 2) {
+            player2.selection = $(selectionInputToGrab).val().trim()
+            player2.isReady = true
+        }
 
-        //Update the appropriate document in Firebase with the supplied information
-        database.ref(`${docToAlter}/selection`).set({
-            rpsChoice: selectionValue,
-            isReady: true
-        });
+        player1.syncToDatabase()
+        player2.syncToDatabase()
+        game.syncToDatabase()
+
     },
     analyzeForWin: function () {
-        console.log('p1: ' + p1sel)
-        console.log('p2: ' + p2sel)
 
         //Check for tie
-        if (p1sel === p2sel) {
+        if (player1.selection === player2.selection) {
             game.winningPlayer = 'No one'
             game.winningName = 'No one'
         };
 
         //See if player 1 wins
-        if (p1sel === 'rock' && p2sel === 'scissors') {
+        if (player1.selection === 'rock' && player2.selection === 'scissors') {
             game.winningPlayer = 'Player 1'
             game.winningName = player1.name
-        } else if (p1sel === 'scissors' && p2sel === 'paper') {
+        } else if (player1.selection === 'scissors' && player2.selection === 'paper') {
             game.winningPlayer = 'Player 1'
             game.winningName = player1.name
-        } else if (p1sel === 'paper' && p2sel === 'rock') {
+        } else if (player1.selection === 'paper' && player2.selection === 'rock') {
             game.winningPlayer = 'Player 1'
             game.winningName = player1.name
         };
 
         //See if player 2 wins
-        if (p2sel === 'rock' && p1sel === 'scissors') {
+        if (player2.selection === 'rock' && player1.selection === 'scissors') {
             game.winningPlayer = 'Player 2'
             game.winningName = player2.name
-        } else if (p2sel === 'scissors' && p1sel === 'paper') {
+        } else if (player2.selection === 'scissors' && player1.selection === 'paper') {
             game.winningPlayer = 'Player 2'
             game.winningName = player2.name
-        } else if (p2sel === 'paper' && p1sel === 'rock') {
+        } else if (player2.selection === 'paper' && player1.selection === 'rock') {
             game.winningPlayer = 'Player 2'
             game.winningName = player2.name
         };
 
-        database.ref(`/game/results`).set({
-            name: game.winningName,
-            player: game.winningPlayer,
-            resultText: `${player1.name} selected ${player1.selection}. ${player2.name} selected ${player2.selection}. ${game.winningName} won the game.`
-        });
+        game.resultText = `${player1.name} chose ${player1.selection}. ${player2.name} chose ${player2.selection}. ${game.winningName} won the game.`
 
-        //If analysis for win is viable, both players should return to unready status
-        player1.isReady = false;
-        player2.isReady = false;
+        player1.syncToDatabase()
+        player2.syncToDatabase()
+        game.syncToDatabase()
 
-        //Show who won
-        console.log(game.winningPlayer)
-
-    },
-    applyRewardAndPunishment: function (winner) {
-        database.ref('player1').once('value').then(function (p1snapshot) {
-            database.ref('player2').once('value').then(function (p2snapshot) {
-
-                player1Wins = p1snapshot.val().wins.count
-                player1Losses = p1snapshot.val().losses.count
-                player2Wins = p2snapshot.val().wins.count
-                player2Losses = p2snapshot.val().losses.count
-
-                if (winner === 'Player 1') {
-                    database.ref('player1/wins').update({
-                        count: player1Wins + 1
-                    }); database.ref('player2/losses').update({
-                        count: player2Losses + 1
-                    });
-                };
-
-                if (winner === 'Player 2') {
-                    database.ref('player2/wins').update({
-                        count: player2Wins + 1
-                    }); database.ref('player1/losses').update({
-                        count: player1Losses + 1
-                    });
-                };
-
-            });
-        });
     },
     restart: function () {
         event.preventDefault();
 
-        //Make player 1 not ready
-        database.ref(`player1/selection`).set({
-            isReady: false,
-            rpsChoice: '',
-        });
+        player1.isReady = false;
+        player1.selection = '';
 
-        //Make player 2 not ready
-        database.ref(`player2/selection`).set({
-            isReady: false,
-            rpsChoice: '',
-        });
+        player2.isReady = false;
+        player2.selection = '';
 
-        //Clear dropdown boxes and results
-        $('#results').text('')
-        $('#player1selectionInput').val('')
-        $('#player2selectionInput').val('')
+        game.winningPlayer = '';
+        game.winningName = '';
+        game.resultText = '';
 
-        //Clear out the result information
-        database.ref(`game/results`).set({
-            name: '',
-            player: '',
-            resultText: ''
-        });
+        player1.syncToDatabase()
+        player2.syncToDatabase()
+        game.syncToDatabase()
+    },
+    cleanRestart() {
 
-        //Return the winning player to nobody
-        database.ref(`winningPlayer`).update({
-            name: '',
-            player: '',
-        });
-
-        console.log(game.winningPlayer)
+        //This must be done once for every object synced with Firebase
+        this.restart();
+        this.restart();
+        this.restart();
 
     }
 };
@@ -306,21 +306,9 @@ let messages = {
 database.ref().on("value", function (snapshot) {
 
     //Grab the data, save to variables
-    player1.name = snapshot.val().player1.info.name
-    player1.location = snapshot.val().player1.info.location
-    player1.selection = snapshot.val().player1.selection.rpsChoice
-    player1.isReady = snapshot.val().player1.selection.isReady
-    player1.winCount = snapshot.val().player1.wins.count
-    player1.lossCount = snapshot.val().player1.losses.count
-    p1sel = snapshot.val().player1.selection.rpsChoice
-
-    player2.name = snapshot.val().player2.info.name
-    player2.location = snapshot.val().player2.info.location
-    player2.selection = snapshot.val().player2.selection.rpsChoice
-    player2.isReady = snapshot.val().player2.selection.isReady
-    player2.winCount = snapshot.val().player2.wins.count
-    player2.lossCount = snapshot.val().player2.losses.count
-    p2sel = snapshot.val().player2.selection.rpsChoice
+    player1.syncFromDatabase(snapshot)
+    player2.syncFromDatabase(snapshot)
+    game.syncFromDatabase(snapshot)
 
     //Analyze player actions
     if (player1.isReady && player2.isReady) {
@@ -330,24 +318,12 @@ database.ref().on("value", function (snapshot) {
     //Put that info on the DOM
     player1.updatePlayerInformationOnHUD()
     player2.updatePlayerInformationOnHUD()
+    game.updateResultsOnDOM()
     messages.updateMessages()
 
 }, function (error) {
     console.log("Error: " + error.code); // Catch errors
 });
-
-//Listen for result-specific changes
-database.ref('/game/results').on("value", function (snapshot) {
-    //Pull the result data, write it to the screen
-    let updatedResultData = snapshot.val().resultText
-    $('#results').text(updatedResultData)
-});
-
-
-
-
-
-
 
 
 
@@ -369,13 +345,19 @@ var activeUsersReference = database.ref("/activeUsers");
 
 //Access the special record in Firebase holding active connections
 var connectedReference = database.ref(".info/connected");
-console.log(connectedReference)
+//console.log(connectedReference)
 
 //Listen for changes in the hidden log of connections statuses...
 connectedReference.on("value", function (snapshot) {
-    console.log(snapshot.val())
+    //console.log(snapshot.val())
     if (snapshot.val()) { // If a change has occurred...
         var connections = activeUsersReference.push(true); // Consider the new user as connected...
         connections.onDisconnect().remove(); // ... and remove the user upon their disconnection.
     }
 });
+
+
+//##########################################################################################################################
+//##################################################### SPECIAL ############################################################
+//##########################################################################################################################
+
