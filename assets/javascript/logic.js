@@ -277,6 +277,7 @@ function updateMessages() {
             let sender = obj[i].sendingPlayer
             $('#allMessageLog').append(`<strong>${sender}</strong>`)
             $('#allMessageLog').append(`<div>${messageToPost}</div>`)
+            $('#allMessageLog').append(`<hr>`)
         };
 
     })
