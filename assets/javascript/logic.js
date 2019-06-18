@@ -172,34 +172,42 @@ let game = {
             game.winningPlayer = 'Player 1'
             game.winningName = player1.name
             player1.winCount += 1
+            player2.lossCount += 1
         } else if (player1.selection === 'scissors' && player2.selection === 'paper') {
             game.winningPlayer = 'Player 1'
             game.winningName = player1.name
+            player1.winCount += 1
+            player2.lossCount += 1
         } else if (player1.selection === 'paper' && player2.selection === 'rock') {
             game.winningPlayer = 'Player 1'
             game.winningName = player1.name
+            player1.winCount += 1
+            player2.lossCount += 1
         };
 
         //See if player 2 wins
         if (player2.selection === 'rock' && player1.selection === 'scissors') {
             game.winningPlayer = 'Player 2'
             game.winningName = player2.name
+            player2.winCount += 1
+            player1.lossCount += 1
         } else if (player2.selection === 'scissors' && player1.selection === 'paper') {
             game.winningPlayer = 'Player 2'
             game.winningName = player2.name
+            player2.winCount += 1
+            player1.lossCount += 1
         } else if (player2.selection === 'paper' && player1.selection === 'rock') {
             game.winningPlayer = 'Player 2'
             game.winningName = player2.name
+            player2.winCount += 1
+            player1.lossCount += 1
         };
 
+        //Set the result text, then sync it to the DB
         game.resultText = `${player1.name} chose ${player1.selection}. ${player2.name} chose ${player2.selection}. ${game.winningName} won the game.`
         game.syncToDatabase()
 
-        console.log(player1.selection)
-        console.log(player1.isReady)
-        console.log(player2.selection)
-        console.log(player2.isReady)
-
+        //Set and sync player isReady statuses to prevent an infinite loop of analyzeForWin from occurring (due to Firebase syncing)
         player1.isReady = false
         player2.isReady = false
         player1.syncToDatabase()
@@ -304,8 +312,18 @@ let messages = {
             };
         })
     },
+    toggleMessagesDisplay: function () {
+        event.preventDefault()
+        $('#allMessageLog').slideToggle()
+    }
 
 };
+
+//Event Display
+
+$(document).on("click", "#chatToggler", function () {
+    messages.toggleMessagesDisplay()
+})
 
 //##########################################################################################################################
 //#################################### INITIAL + CONTINUOUS READ FROM DATABASE #############################################
@@ -330,14 +348,27 @@ database.ref().on("value", function (snapshot) {
     game.updateResultsOnDOM()
     messages.updateMessages()
 
-    console.log(player1.isReady)
-    console.log(player2.isReady)
-
 }, function (error) {
     console.log("Error: " + error.code); // Catch errors
 });
 
-
+function rewardWinner(winner) {
+    if (winner === 'Player 1') {
+        database.ref('player1').update({
+            winCount: player1.winCount += 1
+        })
+        database.ref('player2').update({
+            winCount: player2.lossCount += 1
+        })
+    } else if (winner = 'Player 2') {
+        database.ref('player1').update({
+            winCount: player2.winCount += 1
+        })
+        database.ref('player2').update({
+            winCount: player1.lossCount += 1
+        })
+    }
+}
 
 
 

@@ -34,6 +34,24 @@
 
             <!--Player 1-->
             <div class='col text-center'>
+                <!--PLAYER CARD-->
+                <div class='alert-primary col'>
+                    <div class='border border-primary row'>
+                        <div class='border border-primary col-4' style='background-size: 100% 100%; background-image: url(https://upload.wikimedia.org/wikipedia/commons/4/44/Europe_orthographic_Caucasus_Urals_boundary_%28with_borders%29.svg)'></div>
+                        <div class='border border-primary col-8'>
+                                <div class='border border-primary row'>Player Number</div>
+                                <div class='border border-primary row'>Player Name</div>
+                                <div class='border border-primary row'>Wins</div>
+                                <div class='border border-primary row'>Losses</div>
+                        </div>
+                    </div>
+                    <div class='border border-primary row'>
+                        <div class='border border-primary col'>Send a Message</div>
+                    </div>
+                    <div class='border border-primary row'>
+                        <div class='border border-primary col'>Icons</div>
+                    </div>
+                </div>
                 <h1>Player 1</h1>
                 <hr>
                 <div id='player1display' class='text-left'>
@@ -101,9 +119,9 @@
                     <div id='allMessageLog' class='p-2'></div>
                 </div>
                 <br>
-                <form onsubmit="messages.updateMessages()">
+                <div id='chatToggler'>
                     <button class='btn btn-danger form-control'>Clear Messages</button>
-                </form>
+                </div>
             </div>
 
             <!--Player 2-->
@@ -158,6 +176,11 @@
             </div>
 
         </div>
+
+        <nav class="navbar fixed-bottom navbar-light bg-primary">
+            <a class="navbar-brand text-light" href="#">Fixed bottom</a>
+        </nav>
+
     </main>
 
     <!--Import JS file-->
