@@ -37,31 +37,37 @@
                 <!--PLAYER CARD-->
                 <div class='alert-primary col'>
                     <div class='border border-primary row'>
-                        <div class='border border-primary col-4' style='background-size: 100% 100%; background-image: url(https://upload.wikimedia.org/wikipedia/commons/4/44/Europe_orthographic_Caucasus_Urals_boundary_%28with_borders%29.svg)'></div>
+                        <div class='border border-primary col-4'
+                            style='background-size: 100% 100%; background-image: url(https://upload.wikimedia.org/wikipedia/commons/4/44/Europe_orthographic_Caucasus_Urals_boundary_%28with_borders%29.svg)'>
+                        </div>
                         <div class='border border-primary col-8'>
-                                <div class='border border-primary row'>Player Number</div>
-                                <div class='border border-primary row'>Player Name</div>
-                                <div class='border border-primary row'>Wins</div>
-                                <div class='border border-primary row'>Losses</div>
+                            <div class='border border-primary row'>Player 1</div>
+                            <div id='player1nameDisplay' class='border border-primary row'>Player Name</div>
+                            <div id='player1winsCount' class='border border-primary row'>Wins</div>
+                            <div id='player1lossCount' class='border border-primary row'>Losses</div>
                         </div>
                     </div>
                     <div class='border border-primary row'>
-                        <div class='border border-primary col'>Send a Message</div>
+                        <div class='border border-primary col'>
+                            <form id='player1messageForm' class='row' onsubmit="messages.postMessage(1)">
+                                <div class="col-9">
+                                    <input id='player1messageInput' class='form-control' placeholder="Send a message"></input>
+                                </div>
+                                <button type='submit' class='btn btn-warning form-control col-3'>Update</button>
+                            </form>
+                        </div>
                     </div>
                     <div class='border border-primary row'>
                         <div class='border border-primary col'>Icons</div>
                     </div>
                 </div>
-                <h1>Player 1</h1>
-                <hr>
+
                 <div id='player1display' class='text-left'>
-                    <div id='player1nameDisplay'></div>
                     <div id='player1locationDisplay'></div>
                     <div id='player1selectionDisplay'></div>
                     <div id='player1isReadyDisplay'></div>
-                    <div id='player1winsCount'>Wins: </div>
-                    <div id='player1lossCount'>Losses: </div>
                 </div>
+
                 <br>
                 <form id='player1choiceForm' onsubmit="game.updatePlayerChoiceOnDatabase(1)">
                     <div class="form-group">
@@ -93,12 +99,7 @@
                     <button type='submit' class='btn btn-success form-control'>Update</button>
                 </form>
                 <hr>
-                <form id='player1messageForm' onsubmit="messages.postMessage(1)">
-                    <div class="form-group">
-                        <input id='player1messageInput' class='form-control' placeholder="Send a message"></input>
-                    </div>
-                    <button type='submit' class='btn btn-warning form-control'>Update</button>
-                </form>
+
             </div>
 
             <!--Battleground-->

@@ -375,8 +375,8 @@ function rewardWinner(winner) {
 
 
 
-
-
+$('#player1nameDisplay').css({'font-size': '30px'})
+$('#player1nameDisplay').css({'font-weight': '800'})
 
 
 
