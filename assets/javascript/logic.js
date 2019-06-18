@@ -321,11 +321,15 @@ let messages = {
 
 //Event Display
 
-$(document).ready(function(){
+$(document).ready(function () {
     $('#editPlayer1infoPanel').hide()
     $('#editPlayer1selectionPanel').hide()
     $('#editPlayer2infoPanel').hide()
     $('#editPlayer2selectionPanel').hide()
+    $('#player1nameDisplay').css({ 'font-size': '30px' })
+    $('#player1nameDisplay').css({ 'font-weight': '800' })
+    $('#player2nameDisplay').css({ 'font-size': '30px' })
+    $('#player2nameDisplay').css({ 'font-weight': '800' })
 })
 
 $(document).on("click", "#chatToggler", function () {
@@ -393,15 +397,6 @@ function rewardWinner(winner) {
     }
 }
 
-
-
-
-
-
-$('#player1nameDisplay').css({'font-size': '30px'})
-$('#player1nameDisplay').css({'font-weight': '800'})
-$('#player2nameDisplay').css({'font-size': '30px'})
-$('#player2nameDisplay').css({'font-weight': '800'})
 
 
 
