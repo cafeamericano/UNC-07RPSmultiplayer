@@ -23,39 +23,30 @@ var database = firebase.database();
 //######################################### OBJECTS AND GLOBAL VARIABLES ###################################################
 //##########################################################################################################################
 
-let messageCountTotal;
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PLAYER 1 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 let player1 = {
     name: '',
     location: '',
     selection: '',
-    winCount: 0,
-    lossCount: 0,
     isReady: false,
     syncFromDatabase(snapshot) {
-        player1.name = snapshot.val().player1.name
-        player1.location = snapshot.val().player1.location
-        player1.selection = snapshot.val().player1.selection
-        player1.winCount = snapshot.val().player1.winCount
-        player1.lossCount = snapshot.val().player1.lossCount
-        player1.isReady = snapshot.val().player1.isReady
+        player1.name = snapshot.val().name
+        player1.location = snapshot.val().location
+        player1.selection = snapshot.val().selection
+        player1.isReady = snapshot.val().isReady
     },
     syncToDatabase() {
         database.ref('/player1').update({
             name: this.name,
             location: this.location,
             selection: this.selection,
-            winCount: this.winCount,
-            lossCount: this.lossCount,
             isReady: this.isReady
         });
     },
     updatePlayerInformationOnHUD: function () {
         $("#player1nameDisplay").text(`${this.name}`)
         $("#player1locationDisplay").text(`${this.location}`)
-        $("#player1winsCount").text(`Wins: ${this.winCount}`)
-        $("#player1lossCount").text(`Losses: ${this.lossCount}`)
-        //$("#player1selectionDisplay").text(`${this.selection}`)
         if (this.isReady) {
             $("#player1isReadyDisplay").text(`Selection made!`)
         } else {
@@ -64,37 +55,30 @@ let player1 = {
     }
 };
 
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PLAYER 2 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 let player2 = {
     name: '',
     location: '',
     selection: '',
-    winCount: 0,
-    lossCount: 0,
     isReady: false,
     syncFromDatabase(snapshot) {
-        player2.name = snapshot.val().player2.name
-        player2.location = snapshot.val().player2.location
-        player2.selection = snapshot.val().player2.selection
-        player2.winCount = snapshot.val().player2.winCount
-        player2.lossCount = snapshot.val().player2.lossCount
-        player2.isReady = snapshot.val().player2.isReady
+        player2.name = snapshot.val().name
+        player2.location = snapshot.val().location
+        player2.selection = snapshot.val().selection
+        player2.isReady = snapshot.val().isReady
     },
     syncToDatabase() {
         database.ref('/player2').update({
             name: this.name,
             location: this.location,
             selection: this.selection,
-            winCount: this.winCount,
-            lossCount: this.lossCount,
             isReady: this.isReady
         });
     },
     updatePlayerInformationOnHUD: function () {
         $("#player2nameDisplay").text(`${this.name}`)
         $("#player2locationDisplay").text(`${this.location}`)
-        $("#player2winsCount").text(`Wins: ${this.winCount}`)
-        $("#player2lossCount").text(`Losses: ${this.lossCount}`)
-        //$("#player2selectionDisplay").text(`${this.selection}`)
         if (this.isReady) {
             $("#player2isReadyDisplay").text(`Selection made!`)
         } else {
@@ -103,24 +87,28 @@ let player2 = {
     }
 };
 
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ GAME @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 let game = {
     winningPlayer: '',
     winningName: '',
     resultText: '',
+    playCount: 0,
     syncFromDatabase(snapshot) {
-        this.winningPlayer = snapshot.val().game.winningPlayer
-        this.winningName = snapshot.val().game.winningName
-        this.resultText = snapshot.val().game.resultText
+        this.winningPlayer = snapshot.val().winningPlayer
+        this.winningName = snapshot.val().winningName
+        this.resultText = snapshot.val().resultText
+        this.playCount = snapshot.val().playCount
     },
     syncToDatabase() {
         database.ref('/game').update({
             winningPlayer: this.winningPlayer,
             winningName: this.winningName,
-            resultText: this.resultText
+            resultText: this.resultText,
+            playCount: this.playCount + 1
         });
     },
     updateResultsOnDOM() {
-        //console.log(this.resultText)
         $('#results').text(game.resultText)
     },
     updatePlayerInformationOnDatabase(number) {
@@ -168,51 +156,37 @@ let game = {
     },
     analyzeForWin: function () {
         console.log('Running analyze for win function')
-
-        //Check for tie
         if (player1.selection === player2.selection) {
-            game.winningPlayer = 'No one'
-            game.winningName = 'No one'
-        };
-
-        //See if player 1 wins
-        if (player1.selection === 'rock' && player2.selection === 'scissors') {
-            game.winningPlayer = 'Player 1'
-            game.winningName = player1.name
-            player1.winCount += 1
-            player2.lossCount += 1
+            return 0
+        } else if (player1.selection === 'rock' && player2.selection === 'scissors') {
+            return 1
         } else if (player1.selection === 'scissors' && player2.selection === 'paper') {
-            game.winningPlayer = 'Player 1'
-            game.winningName = player1.name
-            player1.winCount += 1
-            player2.lossCount += 1
+            return 1
         } else if (player1.selection === 'paper' && player2.selection === 'rock') {
-            game.winningPlayer = 'Player 1'
-            game.winningName = player1.name
-            player1.winCount += 1
-            player2.lossCount += 1
-        };
-
-        //See if player 2 wins
-        if (player2.selection === 'rock' && player1.selection === 'scissors') {
-            game.winningPlayer = 'Player 2'
-            game.winningName = player2.name
-            player2.winCount += 1
-            player1.lossCount += 1
+            return 1
+        } else if (player2.selection === 'rock' && player1.selection === 'scissors') {
+            return 2
         } else if (player2.selection === 'scissors' && player1.selection === 'paper') {
-            game.winningPlayer = 'Player 2'
-            game.winningName = player2.name
-            player2.winCount += 1
-            player1.lossCount += 1
+            return 2
         } else if (player2.selection === 'paper' && player1.selection === 'rock') {
-            game.winningPlayer = 'Player 2'
-            game.winningName = player2.name
-            player2.winCount += 1
-            player1.lossCount += 1
+            return 2
         };
+    },
+    processGameCompletion: function() {
+        let winner = this.analyzeForWin()
+        if (winner === 1) {
+            scoreboard.player1wins += 1;
+            scoreboard.player2losses += 1;
+            scoreboard.syncToDatabase()
+        } else if (winner === 2) {
+            scoreboard.player2wins += 1;
+            scoreboard.player1losses += 1;
+            scoreboard.syncToDatabase()
+        }
 
         //Set the result text, then sync it to the DB
         game.resultText = `${player1.name} chose ${player1.selection}. ${player2.name} chose ${player2.selection}. ${game.winningName} won the game.`
+        game.playCount = 1;
         game.syncToDatabase()
 
         //Set and sync player isReady statuses to prevent an infinite loop of analyzeForWin from occurring (due to Firebase syncing)
@@ -225,13 +199,12 @@ let game = {
         player2.syncToDatabase()
 
         //Shut down UI
-        $('#p1column').css({'pointer-events': 'none'})
-        $('#p1column').css({'opacity': '0.5'})
-        $('#p2column').css({'pointer-events': 'none'})
-        $('#p2column').css({'opacity': '0.5'})
-        $('#statusSection').animate({'opacity': '0.0'}, 'fast')
+        $('#p1column').css({ 'pointer-events': 'none' })
+        $('#p1column').css({ 'opacity': '0.5' })
+        $('#p2column').css({ 'pointer-events': 'none' })
+        $('#p2column').css({ 'opacity': '0.5' })
+        $('#statusSection').animate({ 'opacity': '0.0' }, 'fast')
         $('#restartButton').fadeIn()
-
     },
     restart: function () {
         event.preventDefault();
@@ -246,11 +219,11 @@ let game = {
         player2.syncToDatabase()
         game.syncToDatabase()
 
-        $('#p1column').css({'pointer-events': 'auto'})
-        $('#p1column').css({'opacity': '1.0'})
-        $('#p2column').css({'pointer-events': 'auto'})
-        $('#p2column').css({'opacity': '1.0'})
-        $('#statusSection').animate({'opacity': '1.0'}, 'fast')
+        $('#p1column').css({ 'pointer-events': 'auto' })
+        $('#p1column').css({ 'opacity': '1.0' })
+        $('#p2column').css({ 'pointer-events': 'auto' })
+        $('#p2column').css({ 'opacity': '1.0' })
+        $('#statusSection').animate({ 'opacity': '1.0' }, 'fast')
         $('#restartButton').fadeOut()
     },
     cleanRestart() {
@@ -262,6 +235,37 @@ let game = {
 
     }
 };
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SCOREBOARD @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+let scoreboard = {
+    player1wins: 0,
+    player1losses: 0,
+    player2wins: 0,
+    player2losses: 0,
+    syncFromDatabase(snapshot) {
+        this.player1wins = snapshot.val().player1wins
+        this.player1losses = snapshot.val().player1losses
+        this.player2wins = snapshot.val().player2wins
+        this.player2losses = snapshot.val().player2losses
+    },
+    syncToDatabase() {
+        database.ref('/scoreboard').update({
+            player1wins: this.player1wins,
+            player1losses: this.player1losses,
+            player2wins: this.player2wins,
+            player2losses: this.player2losses,
+        });
+    },
+    updateDOM() {
+        $("#player1winsCount").text(`Wins: ${this.player1wins}`)
+        $("#player1lossCount").text(`Losses: ${this.player1losses}`)
+        $("#player2winsCount").text(`Wins: ${scoreboard.player2wins}`)
+        $("#player2lossCount").text(`Losses: ${scoreboard.player2losses}`)
+    }
+};
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MESSAGES @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 let messages = {
     postMessage: function (number) {
@@ -341,7 +345,46 @@ let messages = {
 
 };
 
-//Event Display
+//##########################################################################################################################
+//#################################### INITIAL + CONTINUOUS READ FROM DATABASE #############################################
+//##########################################################################################################################
+
+database.ref('/player1').on("value", function (snapshot) {
+    player1.syncFromDatabase(snapshot)
+    player1.updatePlayerInformationOnHUD()
+    //Analyze player actions
+    if (player1.isReady && player2.isReady) {
+        game.processGameCompletion()
+    };
+});
+
+database.ref('/player2').on("value", function (snapshot) {
+    player2.syncFromDatabase(snapshot)
+    player2.updatePlayerInformationOnHUD()
+    //Analyze player actions
+    if (player1.isReady && player2.isReady) {
+        game.processGameCompletion()
+    };
+});
+
+database.ref('/game').on("value", function (snapshot) {
+    game.syncFromDatabase(snapshot)
+    game.updateResultsOnDOM()
+});
+
+database.ref('/scoreboard').on("value", function (snapshot) {
+    scoreboard.syncFromDatabase(snapshot)
+    console.log(scoreboard)
+    scoreboard.updateDOM()
+});
+
+database.ref('/messages').on("value", function (snapshot) {
+    messages.updateMessages()
+});
+
+//##########################################################################################################################
+//################################################ EVENT LISTENERS #########################################################
+//##########################################################################################################################
 
 $(document).ready(function () {
     $('#editPlayer1infoPanel').hide()
@@ -352,10 +395,6 @@ $(document).ready(function () {
     $('#player1nameDisplay').css({ 'font-weight': '800' })
     $('#player2nameDisplay').css({ 'font-size': '30px' })
     $('#player2nameDisplay').css({ 'font-weight': '800' })
-})
-
-$(document).on("click", "#chatToggler", function () {
-    messages.toggleMessagesDisplay()
 })
 
 $(document).on("click", "#editPlayer1infoToggler", function () {
@@ -375,54 +414,8 @@ $(document).on("click", "#editPlayer2selectionToggler", function () {
 })
 
 //##########################################################################################################################
-//#################################### INITIAL + CONTINUOUS READ FROM DATABASE #############################################
+//################################################ TRACK ACTIVE USERS ######################################################
 //##########################################################################################################################
-
-//Process read
-database.ref().on("value", function (snapshot) {
-
-    //Grab the data, save to variables
-    player1.syncFromDatabase(snapshot)
-    player2.syncFromDatabase(snapshot)
-    game.syncFromDatabase(snapshot)
-
-    //Analyze player actions
-    if (player1.isReady && player2.isReady) {
-        game.analyzeForWin()
-    };
-
-    //Put that info on the DOM
-    player1.updatePlayerInformationOnHUD()
-    player2.updatePlayerInformationOnHUD()
-    game.updateResultsOnDOM()
-    messages.updateMessages()
-
-}, function (error) {
-    console.log("Error: " + error.code); // Catch errors
-});
-
-function rewardWinner(winner) {
-    if (winner === 'Player 1') {
-        database.ref('player1').update({
-            winCount: player1.winCount += 1
-        })
-        database.ref('player2').update({
-            winCount: player2.lossCount += 1
-        })
-    } else if (winner = 'Player 2') {
-        database.ref('player1').update({
-            winCount: player2.winCount += 1
-        })
-        database.ref('player2').update({
-            winCount: player1.lossCount += 1
-        })
-    }
-}
-
-
-
-
-//#################################### TRACK ACTIVE USERS #############################################
 
 //Establish a new document in Firebase to hold a list of all active users
 var activeUsersReference = database.ref("/activeUsers");
@@ -439,9 +432,3 @@ connectedReference.on("value", function (snapshot) {
         connections.onDisconnect().remove(); // ... and remove the user upon their disconnection.
     }
 });
-
-
-//##########################################################################################################################
-//################################################ INITIAL LOAD ############################################################
-//##########################################################################################################################
-
