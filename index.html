@@ -164,18 +164,12 @@
                     <br>
                 </div>
 
-                <!-- Game Results -->
-                <div id='results' class='alert-warning card col text-left'></div>
-                <br>
-
-                <form onsubmit="game.cleanRestart()">
-                    <button id='restartButton' class='btn btn-danger form-control'>Restart Game</button>
-                </form>
             </div>
 
             <!--Messages-->
             <div class='col bg-light card' style='height: 600px'>
-                <div id='allMessageLog' class='col p-2' style='height: 600px; overflow: scroll'></div>
+                <div id='allMessageLog' class='col p-2' style='height: 600px; overflow: scroll'>
+                </div>
             </div>
 
             <!--Player 2-->
@@ -274,6 +268,47 @@
             </div>
 
     </main>
+
+    <!--Start Modal-->
+    <div class="modal fade" id="startModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Welcome</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Welcome to Rock Paper Scissors Live! Complete with another player in realitme and send messages to
+                    one another.
+                </div>
+                <div class="modal-footer">
+                    <button onclick="game.cleanRestart()" data-dismiss="modal" class="btn btn-primary">Begin</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Results Modal-->
+    <div class="modal fade" id="resultsModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Results</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id='results'></div>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="game.cleanRestart()" data-dismiss="modal" class="btn btn-primary">Restart</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!--Import JS file-->
     <script src='assets/javascript/logic.js'></script>

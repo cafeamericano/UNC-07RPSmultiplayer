@@ -172,7 +172,7 @@ let game = {
             return 2
         };
     },
-    processGameCompletion: function() {
+    processGameCompletion: function () {
         let winner = this.analyzeForWin()
         let winnerName;
         if (winner === 0) {
@@ -203,13 +203,9 @@ let game = {
         player1.syncToDatabase()
         player2.syncToDatabase()
 
-        //Shut down UI
-        $('#p1column').css({ 'pointer-events': 'none' })
-        $('#p1column').css({ 'opacity': '0.5' })
-        $('#p2column').css({ 'pointer-events': 'none' })
-        $('#p2column').css({ 'opacity': '0.5' })
-        $('#statusSection').animate({ 'opacity': '0.0' }, 'fast')
-        $('#restartButton').fadeIn()
+        //Display the results
+        modalManager.showResultsModal()
+        
     },
     restart: function () {
         event.preventDefault();
@@ -224,12 +220,6 @@ let game = {
         player2.syncToDatabase()
         game.syncToDatabase()
 
-        $('#p1column').css({ 'pointer-events': 'auto' })
-        $('#p1column').css({ 'opacity': '1.0' })
-        $('#p2column').css({ 'pointer-events': 'auto' })
-        $('#p2column').css({ 'opacity': '1.0' })
-        $('#statusSection').animate({ 'opacity': '1.0' }, 'fast')
-        $('#restartButton').fadeOut()
     },
     cleanRestart() {
 
@@ -321,7 +311,7 @@ let messages = {
             //Determine first and last record
             let firstRecord = Number(arr[0]);
             let lastRecord = Number(arr.slice(-1)[0]);
-            
+
             //Clear what's there, then run the loop
             $('#allMessageLog').empty()
             for (var i = firstRecord + 1; i < lastRecord + 1; i++) { //Eliminate the 'undefined' record
@@ -342,7 +332,7 @@ let messages = {
             };
         })
     },
-    eraseAllMessages: function() {
+    eraseAllMessages: function () {
         database.ref('/messages/count').set({
             total: 1
         });
@@ -363,6 +353,17 @@ let messages = {
     }
 
 };
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MESSAGES @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+let modalManager = {
+    showStartModal: function() {
+        $('#startModal').modal('show');
+    },
+    showResultsModal: function() {
+        $('#resultsModal').modal('show');
+    }
+}
 
 //##########################################################################################################################
 //#################################### INITIAL + CONTINUOUS READ FROM DATABASE #############################################
@@ -405,6 +406,8 @@ database.ref('/messages').on("value", function (snapshot) {
 //################################################ EVENT LISTENERS #########################################################
 //##########################################################################################################################
 
+modalManager.showStartModal()
+
 $(document).ready(function () {
     $('#editPlayer1infoPanel').hide()
     $('#editPlayer1selectionPanel').hide()
@@ -430,6 +433,10 @@ $(document).on("click", "#editPlayer2infoToggler", function () {
 
 $(document).on("click", "#editPlayer2selectionToggler", function () {
     $('#editPlayer2selectionPanel').slideToggle()
+})
+
+$('#toggleStartModal').on('click', function () {
+    modalManager.showStartModal()
 })
 
 //##########################################################################################################################
