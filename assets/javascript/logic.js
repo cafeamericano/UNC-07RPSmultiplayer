@@ -133,7 +133,7 @@ let game = {
         player1.syncToDatabase()
         player2.syncToDatabase()
         scoreboard.syncToDatabase()
-
+        messages.eraseAllMessages()
     },
     updatePlayerChoiceOnDatabase(number) {
         event.preventDefault()
@@ -318,14 +318,13 @@ let messages = {
         database.ref('messages/log').once('value').then(function (snapshot) {
             let obj = snapshot.val()
             let arr = Object.keys(obj)
-
             //Determine first and last record
             let firstRecord = Number(arr[0]);
             let lastRecord = Number(arr.slice(-1)[0]);
-
+            
             //Clear what's there, then run the loop
             $('#allMessageLog').empty()
-            for (var i = firstRecord; i < lastRecord + 1; i++) {
+            for (var i = firstRecord + 1; i < lastRecord + 1; i++) { //Eliminate the 'undefined' record
                 let messageToPost = obj[i].message
                 let sender = obj[i].sendingPlayer
 
@@ -342,6 +341,21 @@ let messages = {
                 $('#allMessageLog').prepend(newBlock)
             };
         })
+    },
+    eraseAllMessages: function() {
+        database.ref('/messages/count').set({
+            total: 1
+        });
+        database.ref('/messages/log').set({
+            0: 'Send a message to get started.'
+        });
+        database.ref('/messages/player1').set({
+            message: ''
+        });
+        database.ref('/messages/player2').set({
+            message: ''
+        });
+        this.updateMessages()
     },
     toggleMessagesDisplay: function () {
         event.preventDefault()
