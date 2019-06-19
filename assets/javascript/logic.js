@@ -119,20 +119,20 @@ let game = {
         if (number === 1) {
             player1.name = $(nameInputToGrab).val().trim()
             player1.location = $(locationInputToGrab).val().trim()
-            player1.winCount = 0;
-            player1.lossCount = 0;
+            scoreboard.player1wins = 0;
+            scoreboard.player1losses = 0;
             $('#editPlayer1infoPanel').slideUp()
         } else if (number === 2) {
             player2.name = $(nameInputToGrab).val().trim()
             player2.location = $(locationInputToGrab).val().trim()
-            player2.winCount = 0;
-            player2.lossCount = 0;
+            scoreboard.player2wins = 0;
+            scoreboard.player2losses = 0;
             $('#editPlayer2infoPanel').slideUp()
         }
 
         player1.syncToDatabase()
         player2.syncToDatabase()
-        game.syncToDatabase()
+        scoreboard.syncToDatabase()
 
     },
     updatePlayerChoiceOnDatabase(number) {
@@ -174,18 +174,23 @@ let game = {
     },
     processGameCompletion: function() {
         let winner = this.analyzeForWin()
-        if (winner === 1) {
+        let winnerName;
+        if (winner === 0) {
+            winnerName = 'No one'
+        } else if (winner === 1) {
+            winnerName = player1.name
             scoreboard.player1wins += 1;
             scoreboard.player2losses += 1;
             scoreboard.syncToDatabase()
         } else if (winner === 2) {
+            winnerName = player2.name
             scoreboard.player2wins += 1;
             scoreboard.player1losses += 1;
             scoreboard.syncToDatabase()
         }
 
         //Set the result text, then sync it to the DB
-        game.resultText = `${player1.name} chose ${player1.selection}. ${player2.name} chose ${player2.selection}. ${game.winningName} won the game.`
+        game.resultText = `${player1.name} chose ${player1.selection}. ${player2.name} chose ${player2.selection}. ${winnerName} won the game.`
         game.playCount = 1;
         game.syncToDatabase()
 
