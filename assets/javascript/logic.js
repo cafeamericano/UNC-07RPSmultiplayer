@@ -131,9 +131,15 @@ let game = {
         if (number === 1) {
             player1.name = $(nameInputToGrab).val().trim()
             player1.location = $(locationInputToGrab).val().trim()
+            player1.winCount = 0;
+            player1.lossCount = 0;
+            $('#editPlayer1infoPanel').slideUp()
         } else if (number === 2) {
             player2.name = $(nameInputToGrab).val().trim()
             player2.location = $(locationInputToGrab).val().trim()
+            player2.winCount = 0;
+            player2.lossCount = 0;
+            $('#editPlayer2infoPanel').slideUp()
         }
 
         player1.syncToDatabase()
@@ -148,9 +154,11 @@ let game = {
         if (number === 1) {
             player1.selection = $(selectionInputToGrab).val().trim()
             player1.isReady = true
+            $('#editPlayer1selectionPanel').slideUp()
         } else if (number === 2) {
             player2.selection = $(selectionInputToGrab).val().trim()
             player2.isReady = true
+            $('#editPlayer2selectionPanel').slideUp()
         }
 
         player1.syncToDatabase()
@@ -434,6 +442,6 @@ connectedReference.on("value", function (snapshot) {
 
 
 //##########################################################################################################################
-//##################################################### SPECIAL ############################################################
+//################################################ INITIAL LOAD ############################################################
 //##########################################################################################################################
 

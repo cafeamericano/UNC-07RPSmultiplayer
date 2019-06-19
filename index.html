@@ -22,6 +22,13 @@
 
     <title>RPS Multiplayer</title>
 
+    <style>
+        body {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/66/Element-LXVII_Installation-1_Alfio_Giuffrida-AG_Sinnwerke.jpg');
+            background-size: cover
+        }
+    </style>
+
 </head>
 
 <body>
@@ -36,7 +43,7 @@
     <br>
 
     <!--Player information shown on DOM-->
-    <main class='container'>
+    <main class='container-fluid'>
         <div class='row'>
 
             <!--Player 1-->
@@ -76,7 +83,7 @@
                     <div class='row'>
                         <div id='editPlayer1infoToggler' class='col text-left'>
                             <i class="fas fa-user fa-lg m-2"></i>
-                            Edit Player Information
+                            Change Player
                         </div>
                     </div>
 
@@ -100,6 +107,9 @@
                                 </div>
                                 <button type='submit' class='btn btn-primary form-control'>Update</button>
                             </form>
+                            <br>
+                            <small>Warning: This will reset the number of wins and losses for the current player. The
+                                chat history will be cleared for both current players.</small>
                         </div>
                     </div>
                     <hr>
@@ -138,13 +148,17 @@
 
                 <div id='statusSection'>
                     <!-- Player 1 Status -->
-                    <h4 class='text-center'>Player 1</h4>
-                    <div id='player1isReadyDisplay' class='alert-secondary card col text-center'></div>
+                    <div class='alert-danger card col text-center p-2'>
+                        <h4 class='text-center' style='font-weight: 800'>Player 1</h4>
+                        <div id='player1isReadyDisplay'></div>
+                    </div>
                     <br>
 
                     <!-- Player 2 Status -->
-                    <h4 class='text-center'>Player 2</h4>
-                    <div id='player2isReadyDisplay' class='alert-secondary card col text-center'></div>
+                    <div class='alert-danger card col text-center p-2'>
+                        <h4 class='text-center' style='font-weight: 800'>Player 2</h4>
+                        <div id='player2isReadyDisplay'></div>
+                    </div>
                     <br>
                 </div>
 
@@ -155,6 +169,11 @@
                 <form onsubmit="game.cleanRestart()">
                     <button id='restartButton' class='btn btn-danger form-control'>Restart Game</button>
                 </form>
+            </div>
+
+            <!--Messages-->
+            <div class='col bg-light card' style='height: 600px'>
+                <div id='allMessageLog' class='col p-2' style='height: 600px; overflow: scroll'></div>
             </div>
 
             <!--Player 2-->
@@ -194,7 +213,7 @@
                     <div class='row'>
                         <div id='editPlayer2infoToggler' class='col text-left'>
                             <i class="fas fa-user fa-lg m-2"></i>
-                            Edit Player Information
+                            Change Player
                         </div>
                     </div>
 
@@ -218,6 +237,9 @@
                                 </div>
                                 <button type='submit' class='btn btn-primary form-control'>Update</button>
                             </form>
+                            <br>
+                            <small>Warning: This will reset the number of wins and losses for the current player. The
+                                chat history will be cleared for both current players.</small>
                         </div>
                     </div>
                     <hr>
@@ -246,14 +268,7 @@
                             </form>
                         </div>
                     </div>
-
                 </div>
-
-            </div>
-
-            <!--Messages-->
-            <div class='col bg-dark' style='position: fixed; top: 49px; right: 50px; width: 300px'>
-                <div id='allMessageLog' class='col p-2' style='height: 600px; overflow: scroll'></div>
             </div>
 
     </main>
