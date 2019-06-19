@@ -29,20 +29,18 @@
     <!--Number of active users-->
     <div id='activeUserCount'></div>
 
-    <div class="pos-f-t">
-        <nav class="navbar navbar-dark bg-dark">
-
-        </nav>
+    <div class='bg-dark text-right' style="height: 50px">
+        <i id='chatToggler' class="fas fa-comments fa-2x m-2 mr-5" style='color: white'></i>
     </div>
 
     <br>
 
     <!--Player information shown on DOM-->
-    <main class='container-fluid'>
+    <main class='container'>
         <div class='row'>
 
             <!--Player 1-->
-            <div class='col text-center'>
+            <div id='p1column' class='col text-center'>
                 <!--###################PLAYER CARD###################-->
                 <div class='alert-primary card col'>
 
@@ -108,7 +106,7 @@
 
                     <!--Make selection toggler-->
                     <div class='row'>
-                        <div id='editPlayer1selectionToggler' class='col text-left'>
+                        <div id='editPlayer1selectionToggler' class='col text-left mb-2'>
                             <i class="fas fa-cut fa-lg m-2"></i>
                             Select a Weapon
                         </div>
@@ -130,12 +128,6 @@
                             </form>
                         </div>
                     </div>
-                    <hr>
-
-                    <!--isReady Display-->
-                    <div class='row'>
-                        <div id='player1isReadyDisplay' class='col text-left p-2'> </div>
-                    </div>
 
                 </div>
 
@@ -143,23 +135,30 @@
 
             <!--Battleground-->
             <div class='col'>
-                <h1 class='text-center'>Battleground</h1>
-                <div class='card' style='height: 300px; width: 100%'>
-                    <div id='results'></div>
+
+                <div id='statusSection'>
+                    <!-- Player 1 Status -->
+                    <h4 class='text-center'>Player 1</h4>
+                    <div id='player1isReadyDisplay' class='alert-secondary card col text-center'></div>
+                    <br>
+
+                    <!-- Player 2 Status -->
+                    <h4 class='text-center'>Player 2</h4>
+                    <div id='player2isReadyDisplay' class='alert-secondary card col text-center'></div>
+                    <br>
                 </div>
+
+                <!-- Game Results -->
+                <div id='results' class='alert-warning card col text-left'></div>
                 <br>
+
                 <form onsubmit="game.cleanRestart()">
-                    <button class='btn btn-danger form-control'>Restart Game</button>
+                    <button id='restartButton' class='btn btn-danger form-control'>Restart Game</button>
                 </form>
             </div>
 
-            <!--Battleground-->
-            <div class='col'>
-                <div id='allMessageLog' class='col p-2' style='height: 600px; overflow: scroll'></div>
-            </div>
-
             <!--Player 2-->
-            <div class='col text-center'>
+            <div id='p2column' class='col text-center'>
                 <!--###################PLAYER CARD###################-->
                 <div class='alert-primary card col'>
 
@@ -225,7 +224,7 @@
 
                     <!--Make selection toggler-->
                     <div class='row'>
-                        <div id='editPlayer2selectionToggler' class='col text-left'>
+                        <div id='editPlayer2selectionToggler' class='col text-left mb-2'>
                             <i class="fas fa-cut fa-lg m-2"></i>
                             Select a Weapon
                         </div>
@@ -247,15 +246,14 @@
                             </form>
                         </div>
                     </div>
-                    <hr>
-
-                    <!--isReady Display-->
-                    <div class='row'>
-                        <div id='player2isReadyDisplay' class='col text-left p-2'> </div>
-                    </div>
 
                 </div>
 
+            </div>
+
+            <!--Messages-->
+            <div class='col bg-dark' style='position: fixed; top: 49px; right: 50px; width: 300px'>
+                <div id='allMessageLog' class='col p-2' style='height: 600px; overflow: scroll'></div>
             </div>
 
     </main>

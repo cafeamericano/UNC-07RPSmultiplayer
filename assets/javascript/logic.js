@@ -59,7 +59,7 @@ let player1 = {
         if (this.isReady) {
             $("#player1isReadyDisplay").text(`Selection made!`)
         } else {
-            $("#player1isReadyDisplay").text(`Decision pending.`)
+            $("#player1isReadyDisplay").text(`Not ready.`)
         };
     }
 };
@@ -98,7 +98,7 @@ let player2 = {
         if (this.isReady) {
             $("#player2isReadyDisplay").text(`Selection made!`)
         } else {
-            $("#player2isReadyDisplay").text(`Decision pending.`)
+            $("#player2isReadyDisplay").text(`Not ready.`)
         };
     }
 };
@@ -210,18 +210,25 @@ let game = {
         //Set and sync player isReady statuses to prevent an infinite loop of analyzeForWin from occurring (due to Firebase syncing)
         player1.isReady = false
         player2.isReady = false
+        player1.selection = '';
+        player2.selection = '';
+
         player1.syncToDatabase()
         player2.syncToDatabase()
+
+        //Shut down UI
+        $('#p1column').css({'pointer-events': 'none'})
+        $('#p1column').css({'opacity': '0.5'})
+        $('#p2column').css({'pointer-events': 'none'})
+        $('#p2column').css({'opacity': '0.5'})
+        $('#statusSection').animate({'opacity': '0.0'}, 'fast')
+        $('#restartButton').fadeIn()
 
     },
     restart: function () {
         event.preventDefault();
 
-        player1.isReady = false;
-        player1.selection = '';
-
-        player2.isReady = false;
-        player2.selection = '';
+        //NOTE: Player isReady and selection cleared at end of analyzeForWin. This is so restart() will not remove a player's selection if they have already restarted and selected for a new game.
 
         game.winningPlayer = '';
         game.winningName = '';
@@ -230,6 +237,13 @@ let game = {
         player1.syncToDatabase()
         player2.syncToDatabase()
         game.syncToDatabase()
+
+        $('#p1column').css({'pointer-events': 'auto'})
+        $('#p1column').css({'opacity': '1.0'})
+        $('#p2column').css({'pointer-events': 'auto'})
+        $('#p2column').css({'opacity': '1.0'})
+        $('#statusSection').animate({'opacity': '1.0'}, 'fast')
+        $('#restartButton').fadeOut()
     },
     cleanRestart() {
 
@@ -301,7 +315,7 @@ let messages = {
                 let newBlock = $('<div>')
                 if (sender === 'Player 1') {
                     $(newBlock).css({ 'text-align': 'left' })
-                    $(newBlock).addClass('alert alert-primary')
+                    $(newBlock).addClass('alert alert-warning')
                 } else {
                     $(newBlock).css({ 'text-align': 'right' })
                     $(newBlock).addClass('alert alert-success')
