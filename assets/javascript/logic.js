@@ -335,7 +335,7 @@ let messages = {
                     $(newBlock).addClass('alert alert-warning')
                 } else {
                     $(newBlock).css({ 'text-align': 'right' })
-                    $(newBlock).addClass('alert alert-success')
+                    $(newBlock).addClass('alert alert-info')
                 }
                 newBlock.append(`<strong>${sender}</strong>`)
                 newBlock.append(`<div>${messageToPost}</div>`)
