@@ -117,7 +117,12 @@ let game = {
         });
     },
     updateResultsOnDOM() {
-        $('#results').text(game.resultText)
+        console.log(game.resultText)
+        if (game.resultText !== '') {
+            $('#results').text(game.resultText)
+        } else {
+            $('#results').text('Your opponent has restarted the game!')
+        }
     },
     updatePlayerInformationOnDatabase(number) {
         event.preventDefault()
