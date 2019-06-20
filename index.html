@@ -45,7 +45,7 @@
     <br>
 
     <!--Player information shown on DOM-->
-    <main class='container-fluid'>
+    <main class='container'>
         <div class='row'>
 
             <!--Player 1-->
@@ -162,15 +162,20 @@
                         <div id='player2isReadyDisplay'></div>
                     </div>
                     <br>
+
+                    <!--Messages-->
+                    <div class='card'>
+                        <div class='card-header text-center alert-secondary' style='font-weight: 800'>Message Center</div>
+                        <div class='col bg-light card-body' style='height: 400px; overflow: scroll'>
+                            <div id='allMessageLog' class='col p-2' style='height: 600px'></div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
 
-            <!--Messages-->
-            <div class='col bg-light card' style='height: 600px'>
-                <div id='allMessageLog' class='col p-2' style='height: 600px; overflow: scroll'>
-                </div>
-            </div>
+
 
             <!--Player 2-->
             <div id='p2column' class='col text-center'>
