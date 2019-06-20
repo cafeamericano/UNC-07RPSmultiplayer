@@ -455,18 +455,18 @@ $('#toggleStartModal').on('click', function () {
 //################################################ TRACK ACTIVE USERS ######################################################
 //##########################################################################################################################
 
-//Establish a new document in Firebase to hold a list of all active users
-var activeUsersReference = database.ref("/activeUsers");
+// //Establish a new document in Firebase to hold a list of all active users
+// var activeUsersReference = database.ref("/activeUsers");
 
-//Access the special record in Firebase holding active connections
-var connectedReference = database.ref(".info/connected");
-//console.log(connectedReference)
+// //Access the special record in Firebase holding active connections
+// var connectedReference = database.ref(".info/connected");
+// //console.log(connectedReference)
 
-//Listen for changes in the hidden log of connections statuses...
-connectedReference.on("value", function (snapshot) {
-    //console.log(snapshot.val())
-    if (snapshot.val()) { // If a change has occurred...
-        var connections = activeUsersReference.push(true); // Consider the new user as connected...
-        connections.onDisconnect().remove(); // ... and remove the user upon their disconnection.
-    }
-});
+// //Listen for changes in the hidden log of connections statuses...
+// connectedReference.on("value", function (snapshot) {
+//     //console.log(snapshot.val())
+//     if (snapshot.val()) { // If a change has occurred...
+//         var connections = activeUsersReference.push(true); // Consider the new user as connected...
+//         connections.onDisconnect().remove(); // ... and remove the user upon their disconnection.
+//     }
+// });
