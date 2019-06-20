@@ -1,5 +1,9 @@
-# GIF Finder Application
+# RPS Live (Multiplayer)
 
-In this application, select a topic button (or create a new one) to retrieve GIFs from the GIPHY API. Per assignment instructions, GIFs that are returned default to non-animated images; animation will occur upon clicking on the returned image. Each time a topic is clicked, the user will receive new images instead of the same first 10 received upon the initial click.
+In this application, compete remotely with a friend in a game of rock/paper/scissors and communicate with one another using a built-in messaging feature.
 
-Each image has its rating displayed at the bottom of the image thumbnail. Images may be favorited upon clicking the icon in the top-right corner; this will relocate the image into the 'favorites' section where the user has the option to unfavorite the GIF. **Through the use of local storage, favorited items will persist even when the user leaves the application.**
+To claim a position as Player 1 or Player 2, click 'Change Player' on the appropriate side of the screen and provide the necessary information. Upon doing this, all wins/losses gathered by the previous player will be reset. Additionally, all chat history will be cleared since a new pair of opponents is being established.
+
+The indication of 'not ready' (and red highlighting) for a player's status (above the message center) means that a player has not yet selected rock, paper, or scissors. The player may select their weapon of choice by clicking 'Select a Weapon', choosing an option, and clicking 'Commit'. Once this is done, the player's status will change to 'selection made' and the red highlighting replaced by green highlighting.
+
+When both players have made their selection, the game is over. The results of the game will appear in a modal, and the win/loss points will be applied to their respective players. The players will be given an option to restart the game; once one player chooses to restart the game, the other player will be notified of their opponents action.
