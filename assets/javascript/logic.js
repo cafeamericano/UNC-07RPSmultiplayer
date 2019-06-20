@@ -301,9 +301,14 @@ let messages = {
             let count = total;
 
             //Write to DB
-            let sendingPlayer = 'Player ' + senderNumber
+            let senderName;
+            if (senderNumber === 1) {
+                senderName = player1.name
+            } else if (senderNumber === 2) {
+                senderName = player2.name
+            };
             database.ref('messages/log').update({
-                [count]: { message, sendingPlayer },
+                [count]: { message, senderName },
             });
 
             //Then increment count
@@ -326,16 +331,17 @@ let messages = {
             $('#allMessageLog').empty()
             for (var i = firstRecord + 1; i < lastRecord + 1; i++) { //Eliminate the 'undefined' record
                 let messageToPost = obj[i].message
-                let sender = obj[i].sendingPlayer
+                let sender = obj[i].senderName
 
                 let newBlock = $('<div>')
-                if (sender === 'Player 1') {
+                if (sender === player1.name) {
                     $(newBlock).css({ 'text-align': 'left' })
                     $(newBlock).addClass('alert alert-warning')
-                } else {
+                } else if (sender === player2.name) {
                     $(newBlock).css({ 'text-align': 'right' })
                     $(newBlock).addClass('alert alert-info')
                 }
+
                 newBlock.append(`<strong>${sender}</strong>`)
                 newBlock.append(`<div>${messageToPost}</div>`)
                 $('#allMessageLog').prepend(newBlock)
@@ -364,7 +370,7 @@ let messages = {
 
 };
 
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MESSAGES @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MODAL MANAGER @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 let modalManager = {
     showStartModal: function () {
@@ -418,8 +424,6 @@ database.ref('/messages').on("value", function (snapshot) {
 //################################################ EVENT LISTENERS #########################################################
 //##########################################################################################################################
 
-modalManager.showStartModal()
-
 $(document).ready(function () {
     $('#editPlayer1infoPanel').hide()
     $('#editPlayer1selectionPanel').hide()
@@ -450,6 +454,12 @@ $(document).on("click", "#editPlayer2selectionToggler", function () {
 $('#toggleStartModal').on('click', function () {
     modalManager.showStartModal()
 })
+
+//##########################################################################################################################
+//################################################ RUN PROGRAM #############################################################
+//##########################################################################################################################
+
+modalManager.showStartModal()
 
 //##########################################################################################################################
 //################################################ TRACK ACTIVE USERS ######################################################
