@@ -49,8 +49,12 @@ let player1 = {
         $("#player1locationDisplay").text(`${this.location}`)
         if (this.isReady) {
             $("#player1isReadyDisplay").text(`Selection made!`)
+            $("#p1statusCard").removeClass(`alert-danger`)
+            $("#p1statusCard").addClass(`alert-success`)
         } else {
             $("#player1isReadyDisplay").text(`Not ready.`)
+            $("#p1statusCard").removeClass(`alert-success`)
+            $("#p1statusCard").addClass(`alert-danger`)
         };
     }
 };
@@ -81,8 +85,12 @@ let player2 = {
         $("#player2locationDisplay").text(`${this.location}`)
         if (this.isReady) {
             $("#player2isReadyDisplay").text(`Selection made!`)
+            $("#p2statusCard").removeClass(`alert-danger`)
+            $("#p2statusCard").addClass(`alert-success`)
         } else {
             $("#player2isReadyDisplay").text(`Not ready.`)
+            $("#p2statusCard").removeClass(`alert-success`)
+            $("#p2statusCard").addClass(`alert-danger`)
         };
     }
 };
@@ -205,7 +213,7 @@ let game = {
 
         //Display the results
         modalManager.showResultsModal()
-        
+
     },
     restart: function () {
         event.preventDefault();
@@ -228,6 +236,8 @@ let game = {
         this.restart();
         this.restart();
 
+        //Allow clicks on the application outside of modal
+        $('body').css({'pointer-events': 'auto'})
     }
 };
 
@@ -357,11 +367,13 @@ let messages = {
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MESSAGES @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 let modalManager = {
-    showStartModal: function() {
+    showStartModal: function () {
         $('#startModal').modal('show');
+        $('body').css({ 'pointer-events': 'none' }) //Prevent clicks outside of modal
     },
-    showResultsModal: function() {
+    showResultsModal: function () {
         $('#resultsModal').modal('show');
+        $('body').css({ 'pointer-events': 'none' }) //Prevent clicks outside of modal
     }
 }
 
