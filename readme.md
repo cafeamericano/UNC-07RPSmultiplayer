@@ -1,5 +1,7 @@
 # RPS Live (Multiplayer)
 
+Deployed at: https://cafeamericano.github.io/UNC-07RPSmultiplayer/
+
 In this application, compete remotely with a friend in a game of rock/paper/scissors and communicate with one another using a built-in messaging feature.
 
 On the initial load, the player(s) may encounter data left over from the players of a previous game. If the same two players are returning, this will allow the opponents to pick up where they left off. If new players are competing against one another, click 'Change Player' on the appropriate side of the screen and provide the necessary information. Upon doing this, all wins/losses gathered by the previous player will be reset. Additionally, all chat history will be cleared since a new pair of opponents is being established.
